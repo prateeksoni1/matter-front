@@ -9,7 +9,7 @@ import { setProfile } from "../actions";
 import PrimaryButton from "../components/PrimaryButton";
 import { toast } from "react-toastify";
 
-const LoginPage = ({ navigate }) => {
+const LoginPage = () => {
   const [formValues, setFormValues] = useState({
     email: "",
     password: ""
