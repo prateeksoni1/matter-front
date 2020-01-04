@@ -13,7 +13,6 @@ const PublicRoute = ({ profile, ...props }) => {
   if (!profile) {
     return <Route {...props} />;
   }
-  toast.success("You are already logged in!");
   return <Redirect to="/dashboard" />;
 };
 
@@ -21,8 +20,7 @@ const PrivateRoute = ({ profile, ...props }) => {
   if (profile) {
     return <Route {...props} />;
   }
-  toast.error("Unauthorized");
-  return <Redirect to="/login" />;
+  return <Redirect to="/signin" />;
 };
 
 const App = () => {
