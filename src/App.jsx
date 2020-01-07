@@ -8,6 +8,7 @@ import api from "./api";
 import { setProfile } from "./actions";
 import { toast } from "react-toastify";
 import { Spinner } from "react-bootstrap";
+import CreateProjectPage from "./pages/CreateProjectPage";
 
 const PublicRoute = ({ profile, ...props }) => {
   if (!profile) {
@@ -62,6 +63,11 @@ const App = () => {
         <PrivateRoute
           path="/dashboard"
           component={Dashboard}
+          profile={profile}
+        />
+        <PrivateRoute
+          path="/create-project"
+          component={CreateProjectPage}
           profile={profile}
         />
       </Switch>

@@ -177,7 +177,9 @@ const RegisterPage = () => {
                     {errors.confirmPassword}
                   </Form.Control.Feedback>
                 </Form.Group>
-                <PrimaryButton type="submit">Register</PrimaryButton>
+                <PrimaryButton type="submit" style={{ width: "100%" }}>
+                  Register
+                </PrimaryButton>
               </Form>
             )}
           </Formik>

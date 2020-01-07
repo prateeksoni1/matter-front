@@ -15,5 +15,6 @@ export default PrimaryButton;
 export const StyledButton = styled(Button)`
   background-color: #ac6bff;
   color: #000;
-  width: 100%;
+  border: 0px;
+  border-radius: 0px;
 `;

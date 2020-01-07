@@ -83,7 +83,9 @@ const LoginPage = () => {
               />
               <Form.Text>Minimum 6 characters.</Form.Text>
             </Form.Group>
-            <PrimaryButton type="submit">Login</PrimaryButton>
+            <PrimaryButton type="submit" style={{ width: "100%" }}>
+              Login
+            </PrimaryButton>
           </Form>
         </Card.Body>
       </StyledCard>
