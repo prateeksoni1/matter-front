@@ -44,6 +44,11 @@ const CreateProjectPage = () => {
       description,
       contributors
     };
+
+    if (!contributors.find(contributor => contributor.role === "admin")) {
+      return toast.error("Atleast one admin is required");
+    }
+
     try {
       await api.post("/api/project", data);
       toast.success("Project created successfully");
