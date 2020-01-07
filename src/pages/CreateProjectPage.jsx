@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import Layout from "../components/Layout";
 import { Formik } from "formik";
 import { useSelector } from "react-redux";
-import { Form, Col } from "react-bootstrap";
+import { Form, Col, Button } from "react-bootstrap";
 import styled from "styled-components";
 import AsyncSelect from "react-select/async";
 import * as Yup from "yup";
 import api from "../api";
 import PrimaryButton from "../components/PrimaryButton";
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowCircleLeft,
+  faArrowCircleRight
+} from "@fortawesome/free-solid-svg-icons";
 
 const CreateProjectPage = () => {
   const profile = useSelector(state => state.auth.profile);
@@ -142,9 +147,9 @@ const CreateProjectPage = () => {
           touched,
           errors
         }) => (
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} className="pb-3">
             <Form.Row>
-              <Col>
+              <StyledCol md={6}>
                 <Form.Group>
                   <Form.Label>Project Name</Form.Label>
                   <Form.Control
@@ -182,8 +187,22 @@ const CreateProjectPage = () => {
                     }}
                   />
                 </Form.Group>
-              </Col>
-              <Col>
+                <Form.Row className="mt-3">
+                  <Col>
+                    <StyledProjectButton size="lg">
+                      <FontAwesomeIcon icon={faArrowCircleLeft} />
+                      <span className="ml-2">Go Back</span>
+                    </StyledProjectButton>
+                  </Col>
+                  <Col>
+                    <StyledProjectButton size="lg" type="submit">
+                      <span className="mr-2">Create</span>
+                      <FontAwesomeIcon icon={faArrowCircleRight} />
+                    </StyledProjectButton>
+                  </Col>
+                </Form.Row>
+              </StyledCol>
+              <StyledCol md={5} className="ml-auto">
                 <Form.Group>
                   <Form.Label>Add members</Form.Label>
                   <AsyncSelect
@@ -204,11 +223,13 @@ const CreateProjectPage = () => {
                     onChange={handleMemberSelect}
                   />
                 </Form.Group>
-                <StyledMembersContainer>
-                  {renderMembers()}
-                </StyledMembersContainer>
-                <PrimaryButton type="submit">Create</PrimaryButton>
-              </Col>
+                <Form.Group>
+                  <Form.Label>Members List</Form.Label>
+                  <StyledMembersContainer>
+                    {renderMembers()}
+                  </StyledMembersContainer>
+                </Form.Group>
+              </StyledCol>
             </Form.Row>
           </Form>
         )}
@@ -220,8 +241,9 @@ const CreateProjectPage = () => {
 export default CreateProjectPage;
 
 const StyledMembersContainer = styled.div`
-  padding: 1rem;
-  background-color: #000;
+  padding: 0.5rem;
+  background-color: #1e1e1e;
+  border: 1px solid #ced4da;
 `;
 
 const StyledMemberContainer = styled(Form.Row)`
@@ -242,4 +264,23 @@ const StyledOption = styled.option`
   &:disabled {
     background-color: #000;
   }
+`;
+
+const StyledProjectButton = styled(Button)`
+  background-color: #000;
+  color: #fff;
+  width: 100%;
+  border-radius: 0px;
+  border: 0px;
+  text-transform: uppercase;
+
+  &:hover {
+    background-color: #ac6bff;
+    color: #000;
+  }
+`;
+
+const StyledCol = styled(Col)`
+  margin-left: 2rem;
+  margin-right: 2rem;
 `;
