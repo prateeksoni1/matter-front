@@ -5,7 +5,10 @@ import { useSelector } from "react-redux";
 import { Form, Col } from "react-bootstrap";
 import styled from "styled-components";
 import AsyncSelect from "react-select/async";
+import * as Yup from "yup";
 import api from "../api";
+import PrimaryButton from "../components/PrimaryButton";
+import { toast } from "react-toastify";
 
 const CreateProjectPage = () => {
   const profile = useSelector(state => state.auth.profile);
@@ -13,16 +16,44 @@ const CreateProjectPage = () => {
   const [contributors, setContributors] = useState([
     {
       profile,
-      role: "admin"
+      role: "member"
     }
   ]);
 
-  const onSubmit = values => {
-    console.log(values);
+  const validationSchema = Yup.object().shape({
+    projectName: Yup.string()
+      .required("Project Name cannot be empty")
+      .min(4)
+      .test("project", "Project already exists", async function(value) {
+        try {
+          const res = await api.get("/api/project/projects", {
+            params: { name: value }
+          });
+          if (res.data.success) return false;
+          return true;
+        } catch (err) {
+          return false;
+        }
+      })
+  });
+
+  const onSubmit = async values => {
+    const { projectName, description } = values;
+    const data = {
+      projectName,
+      description,
+      contributors
+    };
+    try {
+      await api.post("/api/project", data);
+      toast.success("Project created successfully");
+    } catch (err) {
+      toast.error("Error creating project");
+    }
   };
 
   const renderMembers = () => {
-    return contributors.map(contributor => {
+    return contributors.map((contributor, index) => {
       return (
         <StyledMemberContainer>
           <Col
@@ -39,11 +70,17 @@ const CreateProjectPage = () => {
           </Col>
 
           <Col xs={5}>
-            <StyledFormSelect as="select">
-              <StyledOption disabled selected>
-                Select a role
+            <StyledFormSelect
+              as="select"
+              onChange={e => handleRoleSelect(e.target.value, index)}
+            >
+              <StyledOption value="member" defaultChecked>
+                Member
               </StyledOption>
               <StyledOption value="admin">Admin</StyledOption>
+              <StyledOption value="developer">Developer</StyledOption>
+              <StyledOption value="maintainer">Maintainer</StyledOption>
+              <StyledOption value="qa">QA</StyledOption>
             </StyledFormSelect>
           </Col>
         </StyledMemberContainer>
@@ -58,7 +95,7 @@ const CreateProjectPage = () => {
     const profiles = res.data.profiles;
     return profiles.map(profile => ({
       label: profile.name,
-      value: profile.name
+      value: profile
     }));
   };
 
@@ -67,18 +104,30 @@ const CreateProjectPage = () => {
     callback(profiles);
   };
 
+  const handleMemberSelect = (option, actions) => {
+    if (actions.action === "select-option") {
+      setContributors([
+        ...contributors,
+        { profile: option.value, role: "member" }
+      ]);
+    }
+  };
+
+  const handleRoleSelect = (role, index) => {
+    const newContributors = [...contributors];
+    newContributors[index].role = role;
+    setContributors(newContributors);
+  };
+
   return (
     <Layout heading="Create Project">
       <Formik
         onSubmit={onSubmit}
         initialValues={{
-          name: "",
-          username: "",
-          email: "",
-          password: "",
-          confirmPassword: ""
+          projectName: "",
+          description: ""
         }}
-        // validationSchema={schema}
+        validationSchema={validationSchema}
       >
         {({
           handleSubmit,
@@ -96,12 +145,20 @@ const CreateProjectPage = () => {
                   <Form.Control
                     name="projectName"
                     placeholder="Your project name"
+                    onChange={handleChange}
+                    onBlue={handleBlur}
+                    value={values.projectName}
+                    isInvalid={touched && errors.projectName}
+                    required
                     style={{
                       borderRadius: 0,
                       backgroundColor: "#1E1E1E",
                       color: "#fff"
                     }}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.projectName}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Description</Form.Label>
@@ -110,6 +167,9 @@ const CreateProjectPage = () => {
                     placeholder="Your project description"
                     as="textarea"
                     rows="5"
+                    onChange={handleChange}
+                    onBlue={handleBlur}
+                    value={values.description}
                     style={{
                       borderRadius: 0,
                       backgroundColor: "#1E1E1E",
@@ -136,11 +196,13 @@ const CreateProjectPage = () => {
                     loadOptions={loadOptions}
                     controlShouldRenderValue={false}
                     placeholder="Search members"
+                    onChange={handleMemberSelect}
                   />
                 </Form.Group>
                 <StyledMembersContainer>
                   {renderMembers()}
                 </StyledMembersContainer>
+                <PrimaryButton type="submit">Create</PrimaryButton>
               </Col>
             </Form.Row>
           </Form>
