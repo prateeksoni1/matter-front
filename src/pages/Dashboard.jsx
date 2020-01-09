@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import NavbarComponent from "../components/NavbarComponent";
 import styled from "styled-components";
 import PrimaryButton from "../components/PrimaryButton";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
+import { faFolderPlus, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import { StyledButton } from "../styles";
@@ -13,12 +13,16 @@ import { toast } from "react-toastify";
 import moment from "moment";
 import { Row, Col, Button } from "react-bootstrap";
 import DashboardContent from "../components/DashboardContent";
+import { setCurrentProject } from "../actions";
 
 const Dashboard = () => {
   const { _id } = useSelector(state => state.auth.profile);
+  const currentProject = useSelector(state => state.project.currentProject);
+
+  const dispatch = useDispatch();
 
   const [projectsList, setProjectsList] = useState([]);
-  const [activeLink, setActiveLink] = useState([]);
+  const [activeLink, setActiveLink] = useState("OVERVIEW");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +39,19 @@ const Dashboard = () => {
   const renderProjectsList = () => {
     return projectsList.map(project => {
       const { projectName } = project;
-      return <div className="h5">{projectName}</div>;
+
+      const active =
+        currentProject && project.projectName === currentProject.projectName;
+      return (
+        <StyledProjectsListItem
+          className="h5"
+          active={active}
+          onClick={() => dispatch(setCurrentProject(project))}
+        >
+          <span className="mr-2">{projectName}</span>
+          {active && <FontAwesomeIcon icon={faArrowRight} />}
+        </StyledProjectsListItem>
+      );
     });
   };
 
@@ -55,14 +71,18 @@ const Dashboard = () => {
           </StyledProjectsList>
         </Col>
         <Col md={10}>
-          <StyledContainer>
-            <StyledLinksContainer>
-              <StyledTab active>Overview</StyledTab>
-              <StyledTab>Features</StyledTab>
-              <StyledTab>Bugs</StyledTab>
-            </StyledLinksContainer>
-            <DashboardContent activeLink={activeLink} />
-          </StyledContainer>
+          {currentProject ? (
+            <StyledContainer>
+              <StyledLinksContainer>
+                <StyledTab active>Overview</StyledTab>
+                <StyledTab>Features</StyledTab>
+                <StyledTab>Bugs</StyledTab>
+              </StyledLinksContainer>
+              <DashboardContent activeLink={activeLink} />
+            </StyledContainer>
+          ) : (
+            "No Project Selected"
+          )}
         </Col>
       </Row>
     </Layout>
@@ -106,4 +126,9 @@ const StyledTab = styled(Button)`
     background-color: inherit;
     color: #000;
   }
+`;
+
+const StyledProjectsListItem = styled.div`
+  cursor: pointer;
+  font-weight: ${props => (props.active ? "bold" : "400")};
 `;
