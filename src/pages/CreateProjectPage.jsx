@@ -7,7 +7,6 @@ import styled from "styled-components";
 import AsyncSelect from "react-select/async";
 import * as Yup from "yup";
 import api from "../api";
-import PrimaryButton from "../components/PrimaryButton";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

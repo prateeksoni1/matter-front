@@ -1,10 +1,11 @@
 import React from "react";
-import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import api from "../api";
 import { setProfile } from "../actions";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const NavbarComponent = () => {
   const dispatch = useDispatch();
@@ -25,12 +26,9 @@ const NavbarComponent = () => {
     <StyledNavbar variant="dark">
       <StyledNavbarBrand>Matter</StyledNavbarBrand>
       <Nav className="mr-auto">
-        <NavDropdown title="My projects">
-          <NavDropdown.Item>1</NavDropdown.Item>
-          <NavDropdown.Item>1</NavDropdown.Item>
-          <NavDropdown.Item>1</NavDropdown.Item>
-          <NavDropdown.Item>1</NavDropdown.Item>
-        </NavDropdown>
+        <Nav.Link as={Link} to="/dashboard">
+          Dashboard
+        </Nav.Link>
       </Nav>
       <Nav className="ml-auto">
         <Nav.Link>{profile.name}</Nav.Link>
