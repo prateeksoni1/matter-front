@@ -3,22 +3,28 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 
 const Overview = () => {
-  const currentProject = useSelector(state => state.project.currentProject);
+  const {
+    projectName,
+    description,
+    startedOn,
+    lastUpdatedOn,
+    productionVersion
+  } = useSelector(state => state.project.currentProject);
 
   return (
     <div>
-      <div>{currentProject.projectName}</div>
-      <div>{currentProject.description}</div>
-      {currentProject.productionVersion}
+      <div>{projectName}</div>
+      <div>{description}</div>
+      {productionVersion}
       <div>
         Started on
         <br />
-        {moment(currentProject.startedOn).format("DD-MM-YYYY")}
+        {moment(startedOn).format("DD-MM-YYYY")}
       </div>
       <div>
         Last Updated on
         <br />
-        {moment(currentProject.lastUpdatedOn).format("DD-MM-YYYY")}
+        {moment(lastUpdatedOn).format("DD-MM-YYYY")}
       </div>
     </div>
   );
