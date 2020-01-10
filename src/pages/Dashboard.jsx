@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import NavbarComponent from "../components/NavbarComponent";
 import styled from "styled-components";
-import PrimaryButton from "../components/PrimaryButton";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolderPlus, faArrowRight } from "@fortawesome/free-solid-svg-icons";
@@ -10,7 +8,6 @@ import Layout from "../components/Layout";
 import { StyledButton } from "../styles";
 import api from "../api";
 import { toast } from "react-toastify";
-import moment from "moment";
 import { Row, Col, Button } from "react-bootstrap";
 import DashboardContent from "../components/DashboardContent";
 import { setCurrentProject } from "../actions";
