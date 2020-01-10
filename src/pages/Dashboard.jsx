@@ -9,7 +9,7 @@ import { StyledButton } from "../styles";
 import api from "../api";
 import { toast } from "react-toastify";
 import { Row, Col, Button } from "react-bootstrap";
-import DashboardContent from "../components/DashboardContent";
+import DashboardContent from "../components/dashboard/DashboardContent";
 import { setCurrentProject } from "../actions";
 
 const Dashboard = () => {
