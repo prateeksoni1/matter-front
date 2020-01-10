@@ -74,9 +74,24 @@ const Dashboard = () => {
           {currentProject ? (
             <StyledContainer>
               <StyledLinksContainer>
-                <StyledTab active>Overview</StyledTab>
-                <StyledTab>Features</StyledTab>
-                <StyledTab>Bugs</StyledTab>
+                <StyledTab
+                  active={activeLink === "OVERVIEW"}
+                  onClick={() => setActiveLink("OVERVIEW")}
+                >
+                  Overview
+                </StyledTab>
+                <StyledTab
+                  active={activeLink === "FEATURES"}
+                  onClick={() => setActiveLink("FEATURES")}
+                >
+                  Features
+                </StyledTab>
+                <StyledTab
+                  active={activeLink === "BUGS"}
+                  onClick={() => setActiveLink("BUGS")}
+                >
+                  Bugs
+                </StyledTab>
               </StyledLinksContainer>
               <DashboardContent activeLink={activeLink} />
             </StyledContainer>
