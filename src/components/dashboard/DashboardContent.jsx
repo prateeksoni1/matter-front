@@ -1,12 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 import Overview from "./Overview";
+import Features from "./Features";
 
 const DashboardContent = ({ activeLink }) => {
   const renderContent = () => {
     switch (activeLink) {
       case "OVERVIEW":
         return <Overview />;
+      case "FEATURES":
+        return <Features />;
       default:
         return null;
     }
