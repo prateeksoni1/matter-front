@@ -7,17 +7,18 @@ import { StyledButton } from "../../styles";
 import api from "../../api";
 import { toast } from "react-toastify";
 
-const AddFeatureModal = ({ handleHideModal }) => {
+const AddTaskModal = ({ type, handleHideModal, setRefresh }) => {
   const project = useSelector(state => state.project.currentProject);
 
   const onSubmit = async values => {
     const data = {
       ...values,
-      type: "feature",
+      type,
       projectId: project._id
     };
     try {
       await api.post("/api/project/task", data);
+      setRefresh(true);
       handleHideModal();
     } catch (err) {
       toast.error("Something went wrong");
@@ -45,7 +46,7 @@ const AddFeatureModal = ({ handleHideModal }) => {
   return (
     <>
       <Modal.Header closeButton>
-        <Modal.Title>Add Feature</Modal.Title>
+        <Modal.Title>Add Task</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Formik
@@ -152,4 +153,4 @@ const AddFeatureModal = ({ handleHideModal }) => {
   );
 };
 
-export default AddFeatureModal;
+export default AddTaskModal;

@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Overview from "./Overview";
 import Features from "./Features";
+import Bugs from "./Bugs";
 
 const DashboardContent = ({ activeLink }) => {
   const renderContent = () => {
@@ -10,6 +11,8 @@ const DashboardContent = ({ activeLink }) => {
         return <Overview />;
       case "FEATURES":
         return <Features />;
+      case "BUGS":
+        return <Bugs />;
       default:
         return null;
     }

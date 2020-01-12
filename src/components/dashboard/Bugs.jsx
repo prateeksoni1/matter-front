@@ -7,22 +7,22 @@ import api from "../../api";
 import Task from "./Task";
 import TaskDetailModal from "./TaskDetailModal";
 
-const Features = () => {
-  const [showAddFeatureModal, setShowAddFeatureModal] = useState(false);
-  const [showFeatureDetailModal, setShowFeatureDetailModal] = useState(false);
+const Bugs = () => {
+  const [showAddBugModal, setShowAddBugModal] = useState(false);
+  const [showBugDetailModal, setShowBugDetailModal] = useState(false);
   const [refresh, setRefresh] = useState(true);
-  const [features, setFeatures] = useState([]);
-  const [selectedFeature, setSelectedFeature] = useState();
+  const [bugs, setBugs] = useState([]);
+  const [selectedBug, setSelectedBug] = useState();
   const project = useSelector(state => state.project.currentProject);
-  const handleHideFeatureModal = () => setShowAddFeatureModal(false);
-  const handleHideFeatureDetailModal = () => setShowFeatureDetailModal(false);
+  const handleHideBugsModal = () => setShowAddBugModal(false);
+  const handleHideBugDetailModal = () => setShowBugDetailModal(false);
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await api.get(`/api/project/tasks`, {
-        params: { projectId: project._id, type: "feature" }
+        params: { projectId: project._id, type: "bug" }
       });
-      setFeatures(res.data.features);
+      setBugs(res.data.bugs);
     };
     if (refresh) {
       fetchData();
@@ -30,16 +30,16 @@ const Features = () => {
     }
   }, [project._id, refresh]);
 
-  const renderFeatures = () => {
-    return features.map(feature => (
+  const renderBugs = () => {
+    return bugs.map(bug => (
       <Col
         md={3}
         onClick={() => {
-          setSelectedFeature(feature);
-          setShowFeatureDetailModal(true);
+          setSelectedBug(bug);
+          setShowBugDetailModal(true);
         }}
       >
-        <Task task={feature} />
+        <Task task={bug} />
       </Col>
     ));
   };
@@ -50,34 +50,30 @@ const Features = () => {
         <Col md={3}>
           <StyledButton
             style={{ width: "100%" }}
-            onClick={() => setShowAddFeatureModal(true)}
+            onClick={() => setShowAddBugModal(true)}
           >
-            Add feature
+            Add Bug
           </StyledButton>
         </Col>
         <Col md={9}>
-          <Row>{renderFeatures()}</Row>
+          <Row>{renderBugs()}</Row>
         </Col>
       </Row>
-      <Modal
-        centered
-        show={showAddFeatureModal}
-        onHide={handleHideFeatureModal}
-      >
+      <Modal centered show={showAddBugModal} onHide={handleHideBugsModal}>
         <AddTaskModal
-          type="feature"
-          handleHideModal={handleHideFeatureModal}
+          type="bug"
+          handleHideModal={handleHideBugsModal}
           setRefresh={setRefresh}
         />
       </Modal>
       <Modal
         centered
-        show={showFeatureDetailModal}
-        onHide={handleHideFeatureDetailModal}
+        show={showBugDetailModal}
+        onHide={handleHideBugDetailModal}
       >
         <TaskDetailModal
-          task={selectedFeature}
-          handleHideModal={handleHideFeatureDetailModal}
+          task={selectedBug}
+          handleHideModal={handleHideBugDetailModal}
           setRefresh={setRefresh}
         />
       </Modal>
@@ -85,4 +81,4 @@ const Features = () => {
   );
 };
 
-export default Features;
+export default Bugs;
