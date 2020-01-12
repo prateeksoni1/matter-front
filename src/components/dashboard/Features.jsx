@@ -5,6 +5,9 @@ import AddFeatureModal from "./AddFeatureModal";
 
 const Features = () => {
   const [showAddFeatureModal, setShowAddFeatureModal] = useState(false);
+
+  const handleHideModal = () => setShowAddFeatureModal(false);
+
   return (
     <div>
       <Row>
@@ -17,12 +20,8 @@ const Features = () => {
           </StyledButton>
         </Col>
       </Row>
-      <Modal
-        centered
-        show={showAddFeatureModal}
-        onHide={() => setShowAddFeatureModal(false)}
-      >
-        <AddFeatureModal />
+      <Modal centered show={showAddFeatureModal} onHide={handleHideModal}>
+        <AddFeatureModal handleHideModal={handleHideModal} />
       </Modal>
     </div>
   );
