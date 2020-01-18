@@ -1,42 +1,50 @@
-import React from "react";
-import { Card, Form } from "react-bootstrap";
+import React, { useState } from "react";
+import { Card, Form, Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
+import AsyncSelect from "react-select/async";
 
 import api from "../api";
 import { setProfile } from "../actions";
-import PrimaryButton from "../components/PrimaryButton";
+import PrimaryButton, { StyledButton } from "../components/PrimaryButton";
 import { toast } from "react-toastify";
 import { Formik } from "formik";
+import CreateOrganizationModal from "../components/register/CreateOrganizationModal";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const [showOrganizationModal, setShowOrganizationModal] = useState(false);
+
+  const handleHideOrganizationModal = () => {
+    setShowOrganizationModal(false);
+  };
+
   const onSubmit = async values => {
     console.log(values);
-    const { name, username, email, password } = values;
-    try {
-      await api.post("/api/auth/signup", {
-        email,
-        password
-      });
-      const res = await api.post("/api/profile", {
-        name,
-        username,
-        email
-      });
-      if (res.data.success) {
-        dispatch(setProfile(res.data.profile));
-        history.push("/dashboard");
-      } else {
-        toast.error("Could not sign you up");
-      }
-    } catch (err) {
-      toast.error("Internal Server error");
-    }
+    // const { name, username, email, password } = values;
+    // try {
+    //   await api.post("/api/auth/signup", {
+    //     email,
+    //     password
+    //   });
+    //   const res = await api.post("/api/profile", {
+    //     name,
+    //     username,
+    //     email
+    //   });
+    //   if (res.data.success) {
+    //     dispatch(setProfile(res.data.profile));
+    //     history.push("/dashboard");
+    //   } else {
+    //     toast.error("Could not sign you up");
+    //   }
+    // } catch (err) {
+    //   toast.error("Internal Server error");
+    // }
   };
 
   const schema = Yup.object().shape({
@@ -70,6 +78,31 @@ const RegisterPage = () => {
       })
   });
 
+  const fetchOrganizations = async inputValue => {
+    const res = await api.get("/api/organization", {
+      params: { search: inputValue }
+    });
+    const organizations = res.data.organizations;
+    return organizations.map(organization => ({
+      label: organization.name,
+      value: organization._id
+    }));
+  };
+
+  const loadOptions = async (inputValue, callback) => {
+    const profiles = await fetchOrganizations(inputValue);
+    callback(profiles);
+  };
+
+  // const handleMemberSelect = (option, actions) => {
+  //   if (actions.action === "select-option") {
+  //     setOrganization([
+  //       ...contributors,
+  //       { profile: option.value, role: "member" }
+  //     ]);
+  //   }
+  // };
+
   return (
     <StyledContainer>
       <StyledCard>
@@ -82,7 +115,9 @@ const RegisterPage = () => {
               username: "",
               email: "",
               password: "",
-              confirmPassword: ""
+              confirmPassword: "",
+              isOwner: false,
+              organization: ""
             }}
             validationSchema={schema}
           >
@@ -128,6 +163,44 @@ const RegisterPage = () => {
                     {errors.username}
                   </Form.Control.Feedback>
                 </Form.Group>
+                <Form.Group controlId="isOwner">
+                  <Form.Check
+                    label="Are you the owner?"
+                    value={values.isOwner}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </Form.Group>
+                {values.isOwner ? (
+                  <Form.Group>
+                    <StyledButton
+                      onClick={() => setShowOrganizationModal(true)}
+                    >
+                      Add your organization
+                    </StyledButton>
+                  </Form.Group>
+                ) : (
+                  <Form.Group controlId="organization">
+                    <Form.Label>Select Organization</Form.Label>
+                    <AsyncSelect
+                      theme={theme => ({
+                        ...theme,
+                        borderRadius: 0,
+                        colors: {
+                          ...theme.colors,
+                          primary25: "#AC6BFF",
+                          primary: "black",
+                          neutral0: "#1E1E1E"
+                        }
+                      })}
+                      cacheOptions
+                      name="organization"
+                      loadOptions={loadOptions}
+                      controlShouldRenderValue={false}
+                      placeholder="Search organizations"
+                    />
+                  </Form.Group>
+                )}
                 <Form.Group controlId="email">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
@@ -185,6 +258,16 @@ const RegisterPage = () => {
           </Formik>
         </Card.Body>
       </StyledCard>
+      <Modal
+        centered
+        size="xl"
+        show={showOrganizationModal}
+        onHide={handleHideOrganizationModal}
+      >
+        <CreateOrganizationModal
+          handleHideOrganizationModal={handleHideOrganizationModal}
+        />
+      </Modal>
     </StyledContainer>
   );
 };
@@ -199,5 +282,5 @@ const StyledContainer = styled.div`
 `;
 
 const StyledCard = styled(Card)`
-  width: 20%;
+  width: 40%;
 `;

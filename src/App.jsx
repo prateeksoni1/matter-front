@@ -9,7 +9,6 @@ import { setProfile } from "./actions";
 import { toast } from "react-toastify";
 import { Spinner } from "react-bootstrap";
 import CreateProjectPage from "./pages/CreateProjectPage";
-import RegisterOwnerPage from "./pages/RegisterOwnerPage";
 
 const PublicRoute = ({ profile, ...props }) => {
   if (!profile) {
@@ -54,7 +53,6 @@ const App = () => {
     <BrowserRouter>
       <Switch>
         <PublicRoute path="/signin" component={LoginPage} profile={profile} />
-        <PublicRoute path="/signup/owner" exact component={RegisterOwnerPage} profile={profile} />
         <PublicRoute
           path="/signup"
           component={RegisterPage}
