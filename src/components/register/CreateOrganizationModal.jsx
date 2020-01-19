@@ -1,48 +1,22 @@
 import React, { useState } from "react";
 import { Modal, Form, Table } from "react-bootstrap";
 import { Formik } from "formik";
+import api from "../../api";
+import { StyledButton } from "../../styles";
+import * as Yup from "yup";
+import { toast } from "react-toastify";
 
-const CreateOrganizationModal = ({ handleHideOrganizationModal }) => {
+const CreateOrganizationModal = ({
+  handleHideOrganizationModal,
+  setOrganization
+}) => {
   const [rows, setRows] = useState([]);
 
-  const renderRows = () => {
-    return rows.map(row => (
-      <tr>
-        <td>
-          <input />
-        </td>
-        <td>
-          <input />
-        </td>
-        <td>
-          <input />
-        </td>
-        <td>
-          <input />
-        </td>
-        <td>
-          <input />
-        </td>
-        <td>
-          <input />
-        </td>
-        <td>
-          <input />
-        </td>
-        <td>
-          <input />
-        </td>
-        <td>
-          <input />
-        </td>
-        <td>
-          <input />
-        </td>
-      </tr>
-    ));
-  };
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required()
+  });
 
-  const handleAddRow = () => {
+  const handleAddRole = () => {
     setRows([
       ...rows,
       {
@@ -52,8 +26,125 @@ const CreateOrganizationModal = ({ handleHideOrganizationModal }) => {
     ]);
   };
 
-  const onSubmit = values => {
-    console.log(values);
+  const onSubmit = async values => {
+    const { name } = values;
+    try {
+      const data = {
+        name,
+        permissionMatrix: rows
+      };
+      const res = await api.post("/api/organization", data);
+      setOrganization(res.data.organization);
+      toast.success("Organization created successfully");
+      handleHideOrganizationModal();
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
+  };
+
+  const handleChangeRole = (e, index) => {
+    const newRows = [...rows];
+    newRows[index].role = e.target.value;
+    setRows(newRows);
+  };
+
+  const handleChangePermission = (e, permission, index) => {
+    const newRows = [...rows];
+    const { checked } = e.target;
+    if (checked) newRows[index].permissions.push(permission);
+    else {
+      newRows[index].permissions = newRows[index].permissions.filter(
+        item => item !== permission
+      );
+    }
+    setRows(newRows);
+  };
+
+  const renderRows = () => {
+    return rows.map((_, index) => (
+      <tr>
+        <td>
+          <Form.Control
+            placeholder="Role"
+            onChange={e => handleChangeRole(e, index)}
+          />
+        </td>
+        <td>
+          <Form.Check
+            type="checkbox"
+            onChange={e => handleChangePermission(e, "create-project", index)}
+          />
+        </td>
+        <td>
+          <Form.Check
+            type="checkbox"
+            onChange={e => handleChangePermission(e, "edit-project", index)}
+          />
+        </td>
+        <td>
+          <Form.Check
+            type="checkbox"
+            onChange={e => handleChangePermission(e, "edit-permissions", index)}
+          />
+        </td>
+        <td>
+          <Form.Check
+            type="checkbox"
+            onChange={e => handleChangePermission(e, "delete-project", index)}
+          />
+        </td>
+        <td>
+          <Form.Check
+            type="checkbox"
+            onChange={e => handleChangePermission(e, "create-task", index)}
+          />
+        </td>
+        <td>
+          <Form.Check
+            type="checkbox"
+            onChange={e => handleChangePermission(e, "edit-task", index)}
+          />
+        </td>
+        <td>
+          <Form.Check
+            type="checkbox"
+            onChange={e => handleChangePermission(e, "delete-task", index)}
+          />
+        </td>
+        <td>
+          <Form.Check
+            type="checkbox"
+            onChange={e =>
+              handleChangePermission(e, "mark-task-complete", index)
+            }
+          />
+        </td>
+        <td>
+          <Form.Check
+            type="checkbox"
+            onChange={e =>
+              handleChangePermission(e, "mark-task-testing", index)
+            }
+          />
+        </td>
+        <td>
+          <Form.Check
+            type="checkbox"
+            onChange={e =>
+              handleChangePermission(e, "mark-task-deployed", index)
+            }
+          />
+        </td>
+        <td>
+          <Form.Check
+            type="checkbox"
+            onChange={e =>
+              handleChangePermission(e, "mark-task-incomplete", index)
+            }
+          />
+        </td>
+      </tr>
+    ));
   };
 
   return (
@@ -61,8 +152,9 @@ const CreateOrganizationModal = ({ handleHideOrganizationModal }) => {
       <Modal.Header>Create Organization Now</Modal.Header>
       <Modal.Body>
         <Formik
-          initialValues={{ name: "", permissionMatrix: "" }}
+          initialValues={{ name: "" }}
           onSubmit={onSubmit}
+          validationSchema={validationSchema}
         >
           {({
             handleSubmit,
@@ -76,6 +168,7 @@ const CreateOrganizationModal = ({ handleHideOrganizationModal }) => {
               <Form.Group>
                 <Form.Label>Name</Form.Label>
                 <Form.Control
+                  name="name"
                   onChange={handleChange}
                   handleBlur={handleBlur}
                   value={values.name}
@@ -88,26 +181,26 @@ const CreateOrganizationModal = ({ handleHideOrganizationModal }) => {
                 <Table responsive>
                   <thead>
                     <tr>
-                      <th>Role\Permission</th>
-                      <th>Edit Permissions</th>
-                      <th>Create Project</th>
-                      <th>Delete Project</th>
-                      <th>Edit Project</th>
-                      <th>Create Task</th>
-                      <th>Edit Task</th>
-                      <th>Delete Task</th>
-                      <th>Mark Task Incomplete</th>
-                      <th>Mark Task Complete</th>
-                      <th>Mark Task Testing</th>
-                      <th>Mark Task Deployed</th>
+                      <td>Role\Permissions</td>
+                      <td>Create Project</td>
+                      <td>Edit Project</td>
+                      <td>Edit Permissions</td>
+                      <td>Delete Project</td>
+                      <td>Create Task</td>
+                      <td>Edit Task</td>
+                      <td>Delete Task</td>
+                      <td>Mark Task Complete</td>
+                      <td>Mark Task Testing</td>
+                      <td>Mark Task Deployed</td>
+                      <td>Mark Task Incomplete</td>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <button onClick={handleAddRow}>Add</button>
-                    </tr>
-                  </tbody>
+                  <tbody>{renderRows()}</tbody>
                 </Table>
+                <StyledButton onClick={handleAddRole}>Add a role</StyledButton>
+              </Form.Group>
+              <Form.Group>
+                <StyledButton type="submit">Create Organization</StyledButton>
               </Form.Group>
             </Form>
           )}

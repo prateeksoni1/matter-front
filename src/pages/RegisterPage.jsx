@@ -18,33 +18,34 @@ const RegisterPage = () => {
   const history = useHistory();
 
   const [showOrganizationModal, setShowOrganizationModal] = useState(false);
+  const [organization, setOrganization] = useState("");
 
   const handleHideOrganizationModal = () => {
     setShowOrganizationModal(false);
   };
 
   const onSubmit = async values => {
-    console.log(values);
-    // const { name, username, email, password } = values;
-    // try {
-    //   await api.post("/api/auth/signup", {
-    //     email,
-    //     password
-    //   });
-    //   const res = await api.post("/api/profile", {
-    //     name,
-    //     username,
-    //     email
-    //   });
-    //   if (res.data.success) {
-    //     dispatch(setProfile(res.data.profile));
-    //     history.push("/dashboard");
-    //   } else {
-    //     toast.error("Could not sign you up");
-    //   }
-    // } catch (err) {
-    //   toast.error("Internal Server error");
-    // }
+    const { name, username, email, password } = values;
+    try {
+      await api.post("/api/auth/signup", {
+        email,
+        password
+      });
+      const res = await api.post("/api/profile", {
+        name,
+        username,
+        email,
+        organization: organization._id
+      });
+      if (res.data.success) {
+        dispatch(setProfile(res.data.profile));
+        history.push("/dashboard");
+      } else {
+        toast.error("Could not sign you up");
+      }
+    } catch (err) {
+      toast.error("Internal Server error");
+    }
   };
 
   const schema = Yup.object().shape({
@@ -85,7 +86,7 @@ const RegisterPage = () => {
     const organizations = res.data.organizations;
     return organizations.map(organization => ({
       label: organization.name,
-      value: organization._id
+      value: organization
     }));
   };
 
@@ -93,15 +94,6 @@ const RegisterPage = () => {
     const profiles = await fetchOrganizations(inputValue);
     callback(profiles);
   };
-
-  // const handleMemberSelect = (option, actions) => {
-  //   if (actions.action === "select-option") {
-  //     setOrganization([
-  //       ...contributors,
-  //       { profile: option.value, role: "member" }
-  //     ]);
-  //   }
-  // };
 
   return (
     <StyledContainer>
@@ -116,8 +108,7 @@ const RegisterPage = () => {
               email: "",
               password: "",
               confirmPassword: "",
-              isOwner: false,
-              organization: ""
+              isOwner: false
             }}
             validationSchema={schema}
           >
@@ -173,11 +164,15 @@ const RegisterPage = () => {
                 </Form.Group>
                 {values.isOwner ? (
                   <Form.Group>
-                    <StyledButton
-                      onClick={() => setShowOrganizationModal(true)}
-                    >
-                      Add your organization
-                    </StyledButton>
+                    {organization ? (
+                      <div>{organization.name}</div>
+                    ) : (
+                      <StyledButton
+                        onClick={() => setShowOrganizationModal(true)}
+                      >
+                        Add your organization
+                      </StyledButton>
+                    )}
                   </Form.Group>
                 ) : (
                   <Form.Group controlId="organization">
@@ -195,8 +190,8 @@ const RegisterPage = () => {
                       })}
                       cacheOptions
                       name="organization"
+                      onChange={organization => setOrganization(organization)}
                       loadOptions={loadOptions}
-                      controlShouldRenderValue={false}
                       placeholder="Search organizations"
                     />
                   </Form.Group>
@@ -266,6 +261,7 @@ const RegisterPage = () => {
       >
         <CreateOrganizationModal
           handleHideOrganizationModal={handleHideOrganizationModal}
+          setOrganization={setOrganization}
         />
       </Modal>
     </StyledContainer>
