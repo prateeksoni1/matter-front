@@ -31,6 +31,10 @@ const RegisterPage = () => {
         email,
         password
       });
+      await api.post("/api/auth/login", {
+        email,
+        password
+      });
       const res = await api.post("/api/profile", {
         name,
         username,

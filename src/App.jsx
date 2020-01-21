@@ -37,7 +37,6 @@ const App = () => {
           dispatch(setProfile(res.data.profile));
         }
       } catch (err) {
-        toast.error("Internal server error");
       } finally {
         setLoading(false);
       }
