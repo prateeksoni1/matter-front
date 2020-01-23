@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { Formik } from "formik";
 import { useSelector } from "react-redux";
@@ -23,6 +23,20 @@ const CreateProjectPage = () => {
       role: "member"
     }
   ]);
+
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await api.get("/api/organization/roles");
+        setRoles(res.data.roles);
+      } catch (err) {
+        toast.error(err.response.data.message);
+      }
+    };
+    fetchData();
+  }, []);
 
   const validationSchema = Yup.object().shape({
     projectName: Yup.string()
@@ -61,6 +75,10 @@ const CreateProjectPage = () => {
     }
   };
 
+  const renderRoles = () => {
+    return roles.map(role => <StyledOption value={role}>{role}</StyledOption>);
+  };
+
   const renderMembers = () => {
     return contributors.map((contributor, index) => {
       return (
@@ -83,13 +101,7 @@ const CreateProjectPage = () => {
               as="select"
               onChange={e => handleRoleSelect(e.target.value, index)}
             >
-              <StyledOption value="member" defaultChecked>
-                Member
-              </StyledOption>
-              <StyledOption value="admin">Admin</StyledOption>
-              <StyledOption value="developer">Developer</StyledOption>
-              <StyledOption value="maintainer">Maintainer</StyledOption>
-              <StyledOption value="qa">QA</StyledOption>
+              {renderRoles()}
             </StyledFormSelect>
           </Col>
         </StyledMemberContainer>

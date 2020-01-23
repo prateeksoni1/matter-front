@@ -13,9 +13,11 @@ const Features = () => {
   const [refresh, setRefresh] = useState(true);
   const [features, setFeatures] = useState([]);
   const [selectedFeature, setSelectedFeature] = useState();
-  const project = useSelector(state => state.project.currentProject);
   const handleHideFeatureModal = () => setShowAddFeatureModal(false);
   const handleHideFeatureDetailModal = () => setShowFeatureDetailModal(false);
+
+  const project = useSelector(state => state.project.currentProject);
+  const permissions = useSelector(state => state.project.permissions);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +52,7 @@ const Features = () => {
         <Col md={3}>
           <StyledButton
             style={{ width: "100%" }}
+            active={permissions.includes("create-task")}
             onClick={() => setShowAddFeatureModal(true)}
           >
             Add feature

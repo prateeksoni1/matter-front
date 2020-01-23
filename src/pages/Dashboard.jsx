@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 import { Row, Col, Button } from "react-bootstrap";
 import DashboardContent from "../components/dashboard/DashboardContent";
 import { setCurrentProject } from "../actions";
+import { setPermissions } from "../actions/projectActions";
+import Axios from "axios";
 
 const Dashboard = () => {
   const { _id } = useSelector(state => state.auth.profile);
@@ -33,6 +35,18 @@ const Dashboard = () => {
     fetchData();
   }, [_id]);
 
+  const handleProjectSelect = async project => {
+    try {
+      const res = await Axios.get("/api/permissions", {
+        params: { projectId: project._id }
+      });
+      dispatch(setPermissions(res.data.permissions));
+      dispatch(setCurrentProject(project));
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
+  };
+
   const renderProjectsList = () => {
     return projectsList.map(project => {
       const { projectName } = project;
@@ -43,7 +57,7 @@ const Dashboard = () => {
         <StyledProjectsListItem
           className="h5"
           active={active}
-          onClick={() => dispatch(setCurrentProject(project))}
+          onClick={() => handleProjectSelect(project)}
         >
           <span className="mr-2">{projectName}</span>
           {active && <FontAwesomeIcon icon={faArrowRight} />}
