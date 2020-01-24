@@ -1,4 +1,10 @@
 import { setProfile } from "./profileActions";
-import { setCurrentProject } from "./projectActions";
+import { setCurrentProject, setPermissions } from "./projectActions";
 
-export { setProfile, setCurrentProject };
+const logoutUser = () => {
+  return {
+    type: "LOGOUT_USER"
+  };
+};
+
+export { setProfile, setCurrentProject, logoutUser, setPermissions };

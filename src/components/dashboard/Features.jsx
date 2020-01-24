@@ -52,7 +52,7 @@ const Features = () => {
         <Col md={3}>
           <StyledButton
             style={{ width: "100%" }}
-            active={permissions.includes("create-task")}
+            disabled={!permissions.includes("create-task")}
             onClick={() => setShowAddFeatureModal(true)}
           >
             Add feature

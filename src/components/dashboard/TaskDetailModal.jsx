@@ -2,7 +2,6 @@ import React from "react";
 import { Modal } from "react-bootstrap";
 
 const TaskDetailModal = ({ task, handleHideModal, setRefresh }) => {
-  console.log(task);
   const { title, description, assignedTo, assignedBy, priority } = task;
 
   const renderAssignedToList = () => {

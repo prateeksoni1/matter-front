@@ -13,9 +13,11 @@ const Bugs = () => {
   const [refresh, setRefresh] = useState(true);
   const [bugs, setBugs] = useState([]);
   const [selectedBug, setSelectedBug] = useState();
-  const project = useSelector(state => state.project.currentProject);
   const handleHideBugsModal = () => setShowAddBugModal(false);
   const handleHideBugDetailModal = () => setShowBugDetailModal(false);
+
+  const project = useSelector(state => state.project.currentProject);
+  const permissions = useSelector(state => state.project.permissions);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +52,7 @@ const Bugs = () => {
         <Col md={3}>
           <StyledButton
             style={{ width: "100%" }}
+            disabled={!permissions.includes("create-task")}
             onClick={() => setShowAddBugModal(true)}
           >
             Add Bug

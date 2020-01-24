@@ -3,7 +3,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import api from "../api";
-import { setProfile } from "../actions";
+import { logoutUser } from "../actions";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
@@ -15,7 +15,7 @@ const NavbarComponent = () => {
   const handleLogout = async () => {
     try {
       await api.get("/api/auth/logout");
-      dispatch(setProfile(null));
+      dispatch(logoutUser());
       toast.success("Logged out successfully");
     } catch (err) {
       toast.error("Internal server error");

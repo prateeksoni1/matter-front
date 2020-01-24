@@ -10,8 +10,6 @@ import { toast } from "react-toastify";
 const AddTaskModal = ({ type, handleHideModal, setRefresh }) => {
   const project = useSelector(state => state.project.currentProject);
   const profile = useSelector(state => state.auth.profile);
-  console.log(profile);
-
   const onSubmit = async values => {
     const data = {
       ...values,
