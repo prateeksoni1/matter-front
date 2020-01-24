@@ -17,14 +17,14 @@ import {
 const CreateProjectPage = () => {
   const profile = useSelector(state => state.auth.profile);
 
+  const [roles, setRoles] = useState([]);
+
   const [contributors, setContributors] = useState([
     {
       profile,
-      role: "member"
+      role: "owner"
     }
   ]);
-
-  const [roles, setRoles] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,10 +62,6 @@ const CreateProjectPage = () => {
       description,
       contributors
     };
-
-    if (!contributors.find(contributor => contributor.role === "admin")) {
-      return toast.error("Atleast one admin is required");
-    }
 
     try {
       await api.post("/api/project", data);
@@ -129,7 +125,7 @@ const CreateProjectPage = () => {
     if (actions.action === "select-option") {
       setContributors([
         ...contributors,
-        { profile: option.value, role: "member" }
+        { profile: option.value, role: roles[0] }
       ]);
     }
   };

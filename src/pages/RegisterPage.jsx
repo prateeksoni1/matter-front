@@ -194,7 +194,9 @@ const RegisterPage = () => {
                       })}
                       cacheOptions
                       name="organization"
-                      onChange={organization => setOrganization(organization)}
+                      onChange={organization =>
+                        setOrganization(organization.value)
+                      }
                       loadOptions={loadOptions}
                       placeholder="Search organizations"
                     />
