@@ -64,7 +64,7 @@ const Bugs = () => {
       </Row>
       <Modal centered show={showAddBugModal} onHide={handleHideBugsModal}>
         <AddTaskModal
-          type="bug"
+          type="BUG"
           handleHideModal={handleHideBugsModal}
           setRefresh={setRefresh}
         />

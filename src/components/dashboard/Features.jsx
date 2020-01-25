@@ -68,7 +68,7 @@ const Features = () => {
         onHide={handleHideFeatureModal}
       >
         <AddTaskModal
-          type="feature"
+          type="FEATURE"
           handleHideModal={handleHideFeatureModal}
           setRefresh={setRefresh}
         />
