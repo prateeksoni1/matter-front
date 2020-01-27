@@ -75,6 +75,7 @@ const Features = () => {
       </Modal>
       <Modal
         centered
+        size="lg"
         show={showFeatureDetailModal}
         onHide={handleHideFeatureDetailModal}
       >

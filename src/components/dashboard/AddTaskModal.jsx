@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { StyledButton } from "../../styles";
 import api from "../../api";
 import { toast } from "react-toastify";
+import { PRIORITIES } from "../../utils/constants";
 
 const AddTaskModal = ({ type, handleHideModal, setRefresh }) => {
   const project = useSelector(state => state.project.currentProject);
@@ -103,10 +104,10 @@ const AddTaskModal = ({ type, handleHideModal, setRefresh }) => {
                   isInvalid={touched.priority && errors.priority}
                   as="select"
                 >
-                  <option value={0}>Not Important - 0</option>
-                  <option value={1}>Important - 1</option>
-                  <option value={2}>High Priority - 2</option>
-                  <option value={3}>Urgent - 3</option>
+                  <option value={0}>{PRIORITIES[0].label} - 0</option>
+                  <option value={1}>{PRIORITIES[1].label} - 1</option>
+                  <option value={2}>{PRIORITIES[2].label} - 2</option>
+                  <option value={3}>{PRIORITIES[3].label} - 3</option>
                 </Form.Control>
               </Form.Group>
               <Form.Row>
