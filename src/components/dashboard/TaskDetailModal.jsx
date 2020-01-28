@@ -14,6 +14,7 @@ const TaskDetailModal = ({ task, handleHideModal, setRefresh }) => {
   const dispatch = useDispatch();
 
   const permissions = useSelector(state => state.project.permissions);
+  const project = useSelector(state => state.project.currentProject);
 
   const renderAssignedToList = () => {
     return assignedTo.map(contributor => (
@@ -26,7 +27,10 @@ const TaskDetailModal = ({ task, handleHideModal, setRefresh }) => {
   };
 
   const handleMenuClick = async status => {
-    await api.put(`/api/project/task/${task._id}`, { status });
+    await api.put(`/api/project/task/${task._id}`, {
+      projectId: project._id,
+      status
+    });
     setRefresh(true);
   };
 
