@@ -6,9 +6,9 @@ import Dashboard from "./pages/Dashboard";
 import RegisterPage from "./pages/RegisterPage";
 import api from "./api";
 import { setProfile } from "./actions";
-import { toast } from "react-toastify";
 import { Spinner } from "react-bootstrap";
 import CreateProjectPage from "./pages/CreateProjectPage";
+import HomePage from "./pages/HomePage";
 
 const PublicRoute = ({ profile, ...props }) => {
   if (!profile) {
@@ -57,7 +57,8 @@ const App = () => {
           component={RegisterPage}
           profile={profile}
         />
-        <PublicRoute path="/" exact component={LoginPage} profile={profile} />
+        <PublicRoute path="/signin" component={LoginPage} profile={profile} />
+        <PublicRoute path="/" exact component={HomePage} profile={profile} />
 
         <PrivateRoute
           path="/dashboard"
