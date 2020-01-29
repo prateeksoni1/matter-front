@@ -23,6 +23,7 @@ const TaskDetailModal = ({ task, handleHideModal, setRefresh }) => {
       status,
       permission: PERMISSIONS_PER_STATUS[status]
     });
+    handleHideModal();
     setRefresh(true);
   };
 
