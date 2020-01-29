@@ -1,17 +1,12 @@
 import React from "react";
 import { Modal, Row, Col, Dropdown, DropdownButton } from "react-bootstrap";
 import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCog } from "@fortawesome/free-solid-svg-icons";
-import { PRIORITIES } from "../../utils/constants";
-import { Form } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import { Formik } from "formik";
+import { useSelector } from "react-redux";
 import api from "../../api";
+import { PERMISSIONS_PER_STATUS, PRIORITIES } from "../../utils/constants";
 
 const TaskDetailModal = ({ task, handleHideModal, setRefresh }) => {
   const { title, description, assignedTo, assignedBy, priority, status } = task;
-  const dispatch = useDispatch();
 
   const permissions = useSelector(state => state.project.permissions);
   const project = useSelector(state => state.project.currentProject);
@@ -22,14 +17,11 @@ const TaskDetailModal = ({ task, handleHideModal, setRefresh }) => {
     ));
   };
 
-  const onSubmit = values => {
-    console.log(values);
-  };
-
   const handleMenuClick = async status => {
     await api.put(`/api/project/task/${task._id}`, {
       projectId: project._id,
-      status
+      status,
+      permission: PERMISSIONS_PER_STATUS[status]
     });
     setRefresh(true);
   };
@@ -42,25 +34,25 @@ const TaskDetailModal = ({ task, handleHideModal, setRefresh }) => {
           <Dropdown.Item>Edit</Dropdown.Item>
           <Dropdown.Item
             onClick={() => handleMenuClick("COMPLETE")}
-            disabled={!permissions.includes("mark-task-complete")}
+            disabled={!permissions.includes(PERMISSIONS_PER_STATUS.COMPLETE)}
           >
             Mark as Complete
           </Dropdown.Item>
           <Dropdown.Item
             onClick={() => handleMenuClick("DEPLOYED")}
-            disabled={!permissions.includes("mark-task-deployed")}
+            disabled={!permissions.includes(PERMISSIONS_PER_STATUS.DEPLOYED)}
           >
             Mark as Deployed
           </Dropdown.Item>
           <Dropdown.Item
             onClick={() => handleMenuClick("TESTING")}
-            disabled={!permissions.includes("mark-task-testing")}
+            disabled={!permissions.includes(PERMISSIONS_PER_STATUS.TESTING)}
           >
             Mark as Testing
           </Dropdown.Item>
           <Dropdown.Item
             onClick={() => handleMenuClick("INCOMPLETE")}
-            disabled={!permissions.includes("mark-task-incomplete")}
+            disabled={!permissions.includes(PERMISSIONS_PER_STATUS.INCOMPLETE)}
           >
             Mark as Incomplete
           </Dropdown.Item>

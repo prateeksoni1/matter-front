@@ -15,7 +15,8 @@ const AddTaskModal = ({ type, handleHideModal, setRefresh }) => {
     const data = {
       ...values,
       type,
-      projectId: project._id
+      projectId: project._id,
+      permission: 'create-task',
     };
     try {
       await api.post("/api/project/task", data);
