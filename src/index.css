@@ -2,3 +2,15 @@ body {
   background-color: #1e1e1e;
   font-family: Montserrat;
 }
+
+input[type="radio"] ~ .check {
+  border: 5px solid #0dff92;
+}
+
+input[type="radio"]:checked ~ .check {
+  border: 5px solid #0dff92;
+}
+
+input[type="radio"]:checked ~ .check::before {
+  background: #0dff92;
+}
