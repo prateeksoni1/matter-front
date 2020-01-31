@@ -1,22 +1,48 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
     <StyledHomePage>
-      <StyledLeft>
+      <StyledNav>
         <div>
-          <StyledLogo src={{ Image }} />
+          <StyledLogo src={require("../assets/logo-only.png")} />
+        </div>
+        <StyledLinksContainer>
+          <StyledLink to="/signup">Sign up</StyledLink>
+          <StyledLink to="/signin">Sign in</StyledLink>
+        </StyledLinksContainer>
+      </StyledNav>
+      <StyledHeaderContainer>
+        <StyledLeftColumn>
+          <StyledHeading>Matter</StyledHeading>
+          <StyledContentContainer>
+            <StyledSubHeading>Manage your Projects</StyledSubHeading>
+            <StyledContent>
+              An easy-to-use Project Manager app. Designed for organizations,
+              with highly customizable settings as per your organization rules.
+            </StyledContent>
+            <StyledLightButton>Get Started Now</StyledLightButton>
+          </StyledContentContainer>
+        </StyledLeftColumn>
+        <StyledRightColumn>
+          <StyledImageOne src={require("../assets/create-project-card.png")} />
+          <StyledImageTwo src={require("../assets/create-task-card.png")} />
+        </StyledRightColumn>
+      </StyledHeaderContainer>
+      {/* <StyledLeft>
+        <div>
+          <StyledLogo src={require("../assets/logo-only.png")} />
           <StyledLeftName>Matter</StyledLeftName>
           <StyledLeftText>a better tool to track your projects</StyledLeftText>
         </div>
         <StyledLeftButton>Get Started Now</StyledLeftButton>
       </StyledLeft>
-      <StyledMid></StyledMid>
       <StyledRight>
         <StyledRightLinks href="/register">Register</StyledRightLinks>
         <StyledRightLinks href="/register">Login</StyledRightLinks>
-      </StyledRight>
+      </StyledRight> */}
     </StyledHomePage>
   );
 };
@@ -27,9 +53,117 @@ const StyledHomePage = styled.div`
   width: 100%;
   height: 100vh;
   background-color: #000;
-  display: flex;
-  flex-direction: row;
+  /* display: flex;
+  flex-direction: row; */
   color: #fff;
+  padding: 2em 8em;
+`;
+
+const StyledNav = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const StyledLinksContainer = styled.div`
+  width: 15%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const StyledLink = styled(Link)`
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+
+  &:hover {
+    color: #c394ff;
+    text-decoration: none;
+    transition: 0.2s ease-in;
+  }
+`;
+
+const StyledHeaderContainer = styled.div`
+  padding-top: 4em;
+  display: grid;
+  /* grid-column-gap: 50px; */
+  grid-template-columns: 60% 40%;
+`;
+
+const StyledHeading = styled.h1`
+  font-weight: bold;
+  font-size: 144px;
+  text-transform: uppercase;
+  line-height: 176px;
+  letter-spacing: 0.05em;
+
+  color: rgba(195, 148, 255, 0.25);
+
+  @media (max-width: 900px) {
+    font-size: 72px;
+  }
+`;
+
+const StyledContentContainer = styled.div`
+  margin-top: -4.5em;
+  margin-left: 1em;
+`;
+
+const StyledSubHeading = styled.h2`
+  font-size: 64px;
+  font-weight: bold;
+  line-height: 78px;
+
+  /* identical to box height */
+
+  letter-spacing: 0.05em;
+
+  color: #ffffff;
+
+  @media (max-width: 900px) {
+    font-size: 32px;
+  }
+`;
+
+const StyledContent = styled.p`
+  font-size: 20px;
+  line-height: 37px;
+  letter-spacing: 0.05em;
+  width: 70%;
+  margin-bottom: 3em;
+  color: #9f9f9f;
+`;
+
+const StyledLightButton = styled.button`
+  background: #c394ff;
+  box-shadow: 0px 6px 4px rgba(50, 50, 50, 0.4);
+  border-radius: 5px;
+  padding: 1em 4em;
+  border: 0px;
+`;
+
+const StyledLeftColumn = styled.div`
+  /* width: 50%; */
+`;
+
+const StyledRightColumn = styled.div`
+  /* width: 50%; */
+  @media (max-width: 900px) {
+    display: none;
+  }
+`;
+
+const StyledImageOne = styled.img`
+  height: 300px;
+  border-radius: 5px;
+  transform: rotate(-15deg);
+`;
+
+const StyledImageTwo = styled.img`
+  height: 300px;
+  border-radius: 5px;
+  transform: rotate(15deg) translate(-60px, 40px);
 `;
 
 const StyledLeft = styled.div`
@@ -75,14 +209,14 @@ const StyledLeftButton = styled.button`
   outline: none;
 `;
 
-const StyledMid = styled.span`
-  width: 10%;
-  height: 100%;
-  background-color: #ac6bff;
-  @media (max-width: 900px) {
-    display: none;
-  }
-`;
+// const StyledMid = styled.span`
+//   width: 10%;
+//   height: 100%;
+//   background-color: #ac6bff;
+//   @media (max-width: 900px) {
+//     display: none;
+//   }
+// `;
 
 const StyledRight = styled.div`
   display: flex;
