@@ -1,58 +1,49 @@
-import React, { useState } from "react";
-import { Card, Form, Modal } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Card, Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import AsyncSelect from "react-select/async";
 
 import api from "../api";
-import { setProfile } from "../actions";
+import { setProfile, setRegisterForm } from "../actions";
 import PrimaryButton, { StyledButton } from "../components/PrimaryButton";
 import { toast } from "react-toastify";
-import { Formik } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import CreateOrganizationModal from "../components/register/CreateOrganizationModal";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const data = useSelector(state => state.auth.registerFormValues);
+
+  const [currentPage, setCurrentPage] = useState(0);
 
   const [showOrganizationModal, setShowOrganizationModal] = useState(false);
   const [organization, setOrganization] = useState("");
+  const [permissionMatrix, setPermissionMatrix] = useState([]);
 
   const handleHideOrganizationModal = () => {
     setShowOrganizationModal(false);
   };
 
-  const onSubmit = async values => {
-    const { name, username, email, password } = values;
-    try {
-      await api.post("/api/auth/signup", {
-        email,
-        password
-      });
-      await api.post("/api/auth/login", {
-        email,
-        password
-      });
-      const res = await api.post("/api/profile", {
-        name,
-        username,
-        email,
-        organization: organization._id
-      });
-      if (res.data.success) {
-        dispatch(setProfile(res.data.profile));
-        history.push("/dashboard");
-      } else {
-        toast.error("Could not sign you up");
-      }
-    } catch (err) {
-      toast.error("Internal Server error");
-    }
-  };
+  const userSchema = Yup.object().shape({
+    email: Yup.string()
+      .email()
+      .required(),
+    password: Yup.string()
+      .min(6)
+      .required(),
+    confirmPassword: Yup.string()
+      .min(6, "Passwords do not match")
+      .required()
+      .test("password-match", "Passwords do not match", function(value) {
+        return this.parent.password === value;
+      })
+  });
 
-  const schema = Yup.object().shape({
+  const profileSchema = Yup.object().shape({
     name: Yup.string()
       .required()
       .min(4),
@@ -68,19 +59,11 @@ const RegisterPage = () => {
         } catch (err) {
           return false;
         }
-      }),
-    email: Yup.string()
-      .email()
-      .required(),
-    password: Yup.string()
-      .min(6)
-      .required(),
-    confirmPassword: Yup.string()
-      .min(6, "Passwords do not match")
-      .required()
-      .test("password-match", "Passwords do not match", function(value) {
-        return this.parent.password === value;
       })
+  });
+
+  const organizationSchema = Yup.object().shape({
+    name: Yup.string().required()
   });
 
   const fetchOrganizations = async inputValue => {
@@ -99,164 +82,233 @@ const RegisterPage = () => {
     callback(profiles);
   };
 
+  const handleFormData = values => {
+    dispatch(setRegisterForm(values));
+    setCurrentPage(currentPage + 1);
+  };
+
+  useEffect(() => {
+    console.log(currentPage, data);
+  }, [currentPage, data]);
+
+  const handleSubmit = async values => {
+    dispatch(setRegisterForm(values));
+    // const { email, password, name, username } = data;
+    // try {
+    //   await api.post("/api/auth/signup", {
+    //     email,
+    //     password
+    //   });
+    //   await api.post("/api/auth/login", {
+    //     email,
+    //     password
+    //   });
+    //   const res = await api.post("/api/profile", {
+    //     name,
+    //     username,
+    //     email,
+    //     organization: organization._id
+    //   });
+    //   if (res.data.success) {
+    //     dispatch(setProfile(res.data.profile));
+    //     history.push("/dashboard");
+    //   } else {
+    //     toast.error("Could not sign you up");
+    //   }
+    // } catch (err) {
+    //   toast.error("Internal Server error");
+    // }
+  };
+
+  const handleChangeRole = (value, index) => {
+    const newPermissionMatrix = [...permissionMatrix];
+    newPermissionMatrix[index].role = value;
+    setPermissionMatrix(newPermissionMatrix);
+  };
+
+  const handleChangePermissions = (e, index) => {
+    const value = [...e.target.options]
+      .filter(o => o.selected)
+      .map(o => o.value);
+    const newPermissionMatrix = [...permissionMatrix];
+    newPermissionMatrix[index].permissions = value;
+    setPermissionMatrix(newPermissionMatrix);
+  };
+
+  const handleAddItem = () => {
+    const newPermissionMatrix = [...permissionMatrix];
+    newPermissionMatrix.push({ role: "", permissions: [] });
+    setPermissionMatrix(newPermissionMatrix);
+  };
+
+  const handleCreateOrganization = async values => {
+    console.log(values);
+    const { name } = values;
+    try {
+      const data = {
+        name,
+        permissionMatrix
+      };
+      const res = await api.post("/api/organization", data);
+      setOrganization(res.data.organization);
+      toast.success("Organization created successfully");
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
+  };
+
+  const renderPermissions = () => {
+    return permissionMatrix.map((_, index) => (
+      <div>
+        <input
+          onChange={e => handleChangeRole(e.target.value, index)}
+          name="role"
+          placeholder="role"
+        />
+        <select
+          name="permissions"
+          placeholder="permissions"
+          multiple
+          onChange={e => handleChangePermissions(e, index)}
+        >
+          <option value="create-project">Create Project</option>
+          <option value="edit-project">Edit Project</option>
+          <option value="edit-permissions">Edit Permissions</option>
+          <option value="delete-project">Delete Project</option>
+          <option value="create-task">Create Task</option>
+          <option value="edit-task">Edit Task</option>
+          <option value="delete-task">Delete Task</option>
+          <option value="mark-task-complete">Mark Task Complete</option>
+          <option value="mark-task-testing">Mark Task Testing</option>
+          <option value="mark-task-deployed">Mark Task Deployed</option>
+          <option value="mark-task-incomplete">Mark Task Incomplete</option>
+        </select>
+        <ErrorMessage name="name" component="div" />
+      </div>
+    ));
+  };
+
   return (
     <StyledContainer>
       <StyledCard>
         <Card.Body>
           <Card.Title>Register to Matter</Card.Title>
-          <Formik
-            onSubmit={onSubmit}
-            initialValues={{
-              name: "",
-              username: "",
-              email: "",
-              password: "",
-              confirmPassword: "",
-              isOwner: false
-            }}
-            validationSchema={schema}
-          >
-            {({
-              handleSubmit,
-              handleChange,
-              handleBlur,
-              values,
-              touched,
-              errors
-            }) => (
-              <Form noValidate onSubmit={handleSubmit}>
-                <Form.Group controlId="name">
-                  <Form.Label>Name</Form.Label>
-                  <Form.Control
-                    placeholder="Your full name"
-                    name="name"
-                    value={values.name}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.name && errors.name}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.name}
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group controlId="username">
-                  <Form.Label>Username</Form.Label>
 
-                  <Form.Control
-                    placeholder="Your unique username"
-                    name="username"
-                    value={values.username}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.username && errors.username}
-                    isValid={touched.username && !errors.username}
-                  />
-                  <Form.Control.Feedback type="valid">
-                    Looks good!
-                  </Form.Control.Feedback>
-                  <Form.Control.Feedback type="invalid">
-                    {errors.username}
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group controlId="isOwner">
-                  <Form.Check
-                    label="Are you the owner?"
-                    value={values.isOwner}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </Form.Group>
-                {values.isOwner ? (
-                  <Form.Group>
-                    {organization ? (
-                      <div>{organization.name}</div>
-                    ) : (
-                      <StyledButton
-                        onClick={() => setShowOrganizationModal(true)}
-                      >
-                        Add your organization
-                      </StyledButton>
-                    )}
-                  </Form.Group>
-                ) : (
-                  <Form.Group controlId="organization">
-                    <Form.Label>Select Organization</Form.Label>
-                    <AsyncSelect
-                      theme={theme => ({
-                        ...theme,
-                        borderRadius: 0,
-                        colors: {
-                          ...theme.colors,
-                          primary25: "#AC6BFF",
-                          primary: "black",
-                          neutral0: "#1E1E1E"
-                        }
-                      })}
-                      cacheOptions
-                      name="organization"
-                      onChange={organization =>
-                        setOrganization(organization.value)
-                      }
-                      loadOptions={loadOptions}
-                      placeholder="Search organizations"
-                    />
-                  </Form.Group>
+          {currentPage === 0 && (
+            <>
+              <Formik
+                onSubmit={handleFormData}
+                initialValues={{
+                  email: "",
+                  password: "",
+                  confirmPassword: ""
+                }}
+                validationSchema={userSchema}
+              >
+                {({ isSubmitting }) => (
+                  <Form>
+                    <div>
+                      <label htmlFor="email">Email</label>
+                      <Field type="email" name="email" placeholder="email" />
+                      <ErrorMessage name="email" component="div" />
+                    </div>
+                    <div>
+                      <label htmlFor="password">Password</label>
+                      <Field type="password" name="password" />
+                      <ErrorMessage name="password" component="div" />
+                    </div>
+                    <div>
+                      <label htmlFor="confirmPassword">Confirm Password</label>
+                      <Field type="password" name="confirmPassword" />
+                      <ErrorMessage name="confirmPassword" component="div" />
+                    </div>
+                    <button
+                      style={{ width: "100%" }}
+                      disabled={isSubmitting}
+                      type="submit"
+                    >
+                      Continue
+                    </button>
+                  </Form>
                 )}
-                <Form.Group controlId="email">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control
-                    placeholder="email@email.com"
-                    name="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.email && errors.email}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.email}
-                  </Form.Control.Feedback>
-                  <Form.Text>
-                    We'll never share your email with anyone else.
-                  </Form.Text>
-                </Form.Group>
-                <Form.Group controlId="password">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    placeholder="top secret password"
-                    name="password"
-                    type="password"
-                    value={values.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.password && errors.password}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.password}
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group controlId="confirmPassword">
-                  <Form.Label>Confirm Password</Form.Label>
-                  <Form.Control
-                    placeholder="Same password as above"
-                    name="confirmPassword"
-                    type="password"
-                    value={values.confirmPassword}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={
-                      touched.confirmPassword && errors.confirmPassword
-                    }
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.confirmPassword}
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <PrimaryButton type="submit" style={{ width: "100%" }}>
-                  Register
-                </PrimaryButton>
-              </Form>
-            )}
-          </Formik>
+              </Formik>
+            </>
+          )}
+          {currentPage === 1 && (
+            <>
+              <Formik
+                onSubmit={handleFormData}
+                initialValues={{
+                  name: "",
+                  username: "",
+                  isOwner: false
+                }}
+                validationSchema={profileSchema}
+              >
+                {({ isSubmitting }) => (
+                  <Form>
+                    <div>
+                      <label htmlFor="name">Name</label>
+                      <Field name="name" placeholder="name" />
+                      <ErrorMessage name="name" component="div" />
+                    </div>
+                    <div>
+                      <label htmlFor="username">Username</label>
+                      <Field name="username" placeholder="username" />
+                      <ErrorMessage name="username" component="div" />
+                    </div>
+                    <div>
+                      <label htmlFor="isOwner">
+                        Are you owner of an organization?
+                      </label>
+                      <Field type="checkbox" name="isOwner" />
+                      <ErrorMessage name="isOwner" component="div" />
+                    </div>
+                    <button
+                      style={{ width: "100%" }}
+                      disabled={isSubmitting}
+                      type="submit"
+                    >
+                      Create Profile
+                    </button>
+                  </Form>
+                )}
+              </Formik>
+            </>
+          )}
+          {currentPage === 2 && data.isOwner && (
+            <>
+              <Formik
+                onSubmit={handleCreateOrganization}
+                initialValues={{
+                  name: ""
+                }}
+                validationSchema={organizationSchema}
+              >
+                {({ isSubmitting }) => (
+                  <Form>
+                    <div>
+                      <label htmlFor="name">Name</label>
+                      <Field name="name" placeholder="name" />
+                      <ErrorMessage name="name" component="div" />
+                    </div>
+                    <div>
+                      <label htmlFor="permissions">Permissions</label>
+                      <div>{renderPermissions()}</div>
+                      <div onClick={handleAddItem}>+</div>
+                    </div>
+                    <button
+                      style={{ width: "100%" }}
+                      disabled={isSubmitting}
+                      type="submit"
+                    >
+                      Create Profile
+                    </button>
+                  </Form>
+                )}
+              </Formik>
+            </>
+          )}
         </Card.Body>
       </StyledCard>
       <Modal

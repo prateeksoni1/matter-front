@@ -1,4 +1,5 @@
 import { setProfile } from "./profileActions";
+import { setRegisterForm } from "./authActions";
 import { setCurrentProject, setPermissions } from "./projectActions";
 
 const logoutUser = () => {
@@ -7,4 +8,10 @@ const logoutUser = () => {
   };
 };
 
-export { setProfile, setCurrentProject, logoutUser, setPermissions };
+export {
+  setProfile,
+  setCurrentProject,
+  logoutUser,
+  setPermissions,
+  setRegisterForm
+};

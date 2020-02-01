@@ -1,5 +1,6 @@
 const initialState = {
-  profile: null
+  profile: null,
+  registerFormValues: null
 };
 
 export default (state = initialState, action) => {
@@ -8,6 +9,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         profile: action.payload
+      };
+    case "SET_REGISTER_FORM":
+      return {
+        ...state,
+        registerFormValues: {
+          ...state.registerFormValues,
+          ...action.payload
+        }
       };
     default:
       return state;
