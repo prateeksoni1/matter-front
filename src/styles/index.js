@@ -107,7 +107,7 @@ export const StyledFormEmailLabel = styled.label`
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
-  color: #a3a3a3;
+  color: #ffffff;
   margin: 0;
 `;
 
@@ -116,7 +116,7 @@ export const StyledFormPasswordLabel = styled.label`
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
-  color: #a3a3a3;
+  color: #ffffff;
   margin: 10px 0 0 0;
 `;
 
@@ -126,6 +126,7 @@ export const StyledFormEmailInput = styled.input`
   border-radius: 3px;
   border: 0;
   padding: 3px 10px;
+  color: #fff;
 `;
 
 export const StyledFormPasswordInput = styled.input`
@@ -134,6 +135,7 @@ export const StyledFormPasswordInput = styled.input`
   border-radius: 3px;
   border: none;
   padding: 3px 10px;
+  color: #fff;
 `;
 
 export const StyledForgotPassword = styled.a`
@@ -151,9 +153,15 @@ export const StyledLoginButton = styled.button`
   font-weight: 700;
   color: #000;
   text-transform: uppercase;
-  padding: 2px auto;
+  padding: 0.3em 0px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
   border-radius: 3px;
+
+  &:hover {
+    box-shadow: none;
+    background-color: #dabcff;
+    transform: translateY(1px);
+  }
 `;
 
 export const StyledHaveNotSigned = styled.p`
