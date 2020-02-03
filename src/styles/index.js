@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Button, Card } from "react-bootstrap";
+import { Form, Field, ErrorMessage } from "formik";
 
 export const StyledButton = styled(Button)`
   background-color: #000;
@@ -102,6 +103,12 @@ export const StyledFormPassword = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+export const StyledFormConfirmPassword = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 export const StyledFormEmailLabel = styled.label`
   font-family: Montserrat;
   font-style: normal;
@@ -120,7 +127,16 @@ export const StyledFormPasswordLabel = styled.label`
   margin: 10px 0 0 0;
 `;
 
-export const StyledFormEmailInput = styled.input`
+export const StyledFormConfirmPasswordLabel = styled.label`
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  color: #ffffff;
+  margin: 10px 0 0 0;
+`;
+
+export const StyledFormEmailInput = styled(Field)`
   background: #525252;
   box-shadow: 0px 6px 4px rgba(0, 0, 0, 0.25);
   border-radius: 3px;
@@ -129,7 +145,16 @@ export const StyledFormEmailInput = styled.input`
   color: #fff;
 `;
 
-export const StyledFormPasswordInput = styled.input`
+export const StyledFormPasswordInput = styled(Field)`
+  background: #525252;
+  box-shadow: 0px 6px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+  border: none;
+  padding: 3px 10px;
+  color: #fff;
+`;
+
+export const StyledFormConfirmPasswordInput = styled(Field)`
   background: #525252;
   box-shadow: 0px 6px 4px rgba(0, 0, 0, 0.25);
   border-radius: 3px;
@@ -156,6 +181,7 @@ export const StyledLoginButton = styled.button`
   padding: 0.3em 0px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
   border-radius: 3px;
+  margin-top: 20px;
 
   &:hover {
     box-shadow: none;
