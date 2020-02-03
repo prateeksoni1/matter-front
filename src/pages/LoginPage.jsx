@@ -8,7 +8,27 @@ import api from "../api";
 import { setProfile } from "../actions";
 import PrimaryButton from "../components/PrimaryButton";
 import { toast } from "react-toastify";
-
+import {
+  StyledContainer,
+  StyledCard,
+  StyledCardTop,
+  StyledCardBody,
+  StyledCardLeft,
+  LoginImg,
+  StledImageText,
+  StyledCardRight,
+  StyledRightHeading,
+  StyledFormEmail,
+  StyledForgotPassword,
+  StyledFormEmailInput,
+  StyledFormEmailLabel,
+  StyledFormPassword,
+  StyledFormPasswordInput,
+  StyledFormPasswordLabel,
+  StyledHaveNotSigned,
+  StyledLoginButton,
+  StyledSignUpLink
+} from "../styles";
 const LoginPage = () => {
   const [formValues, setFormValues] = useState({
     email: "",
@@ -55,53 +75,71 @@ const LoginPage = () => {
   return (
     <StyledContainer>
       <StyledCard>
-        <Card.Body>
-          <Card.Title>Login to Matter</Card.Title>
-          <Form noValidate validated={validate} onSubmit={onSubmit}>
-            <Form.Group controlId="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                required
-                type="email"
-                placeholder="email@email.com"
-                onChange={e => onChange("email", e.target.value)}
-              />
-              <Form.Control.Feedback type="invalid">
-                Invalid email
-              </Form.Control.Feedback>
-              <Form.Text>
-                We'll never share your email with anyone else.
-              </Form.Text>
-            </Form.Group>
-            <Form.Group controlId="password">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                required
-                type="password"
-                placeholder="secret password"
-                onChange={e => onChange("password", e.target.value)}
-              />
-              <Form.Text>Minimum 6 characters.</Form.Text>
-            </Form.Group>
-            <PrimaryButton type="submit" style={{ width: "100%" }}>
-              Login
-            </PrimaryButton>
-          </Form>
-        </Card.Body>
+        {/* <CardBody> */}
+        <StyledCardTop>Matter</StyledCardTop>
+        <StyledCardBody>
+          <StyledCardLeft>
+            <LoginImg>
+              <StledImageText>
+                The only management app you’ll ever need.
+              </StledImageText>
+            </LoginImg>
+          </StyledCardLeft>
+          <StyledCardRight>
+            <StyledRightHeading>Sign In To Matter</StyledRightHeading>
+            <form>
+              <StyledFormEmail>
+                <StyledFormEmailLabel>Email</StyledFormEmailLabel>
+                <StyledFormEmailInput type="text"></StyledFormEmailInput>
+              </StyledFormEmail>
+              <StyledFormPassword>
+                <StyledFormPasswordLabel>Password</StyledFormPasswordLabel>
+                <StyledFormPasswordInput type="text"></StyledFormPasswordInput>
+              </StyledFormPassword>
+              <StyledForgotPassword>Forgot Password</StyledForgotPassword>
+            </form>
+            <StyledLoginButton>Login</StyledLoginButton>
+            <StyledHaveNotSigned>
+              Haven’t signed up yet?
+              <StyledSignUpLink>Signup here</StyledSignUpLink>
+            </StyledHaveNotSigned>
+          </StyledCardRight>
+        </StyledCardBody>
+        {/* <Card.Title>Login to Matter</Card.Title>
+        <StyledForm noValidate validated={validate} onSubmit={onSubmit}>
+          <StyledFormGroup controlId="email">
+            <StyledFormLabel>Email</StyledFormLabel>
+            <StyledFormControl
+              required
+              type="email"
+              placeholder="email@email.com"
+              onChange={e => onChange("email", e.target.value)}
+            />
+            <StyledFormControlFeedback type="invalid">
+              Invalid email
+            </StyledFormControlFeedback>
+            <StyledFormText>
+              We'll never share your email with anyone else.
+            </StyledFormText>
+          </StyledFormGroup>
+          <StyledFormGroup controlId="password">
+            <StyledFormLabel>Password</StyledFormLabel>
+            <StyledFormControl
+              required
+              type="password"
+              placeholder="secret password"
+              onChange={e => onChange("password", e.target.value)}
+            />
+            <StyledFormText>Minimum 6 characters.</StyledFormText>
+          </StyledFormGroup>
+          <PrimaryButton type="submit" style={{ width: "100%" }}>
+            Login
+          </PrimaryButton>
+        </StyledForm>
+        </CardBody> */}
       </StyledCard>
     </StyledContainer>
   );
 };
 
 export default LoginPage;
-
-const StyledContainer = styled.div`
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const StyledCard = styled(Card)`
-  width: 20%;
-`;
