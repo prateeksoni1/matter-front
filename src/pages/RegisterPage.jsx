@@ -313,7 +313,7 @@ const RegisterPage = () => {
           >
             {({ isSubmitting }) => (
               <Form>
-                <div>
+                {/* <div>
                   <label htmlFor="name">Name</label>
                   <Field name="name" placeholder="name" />
                   <ErrorMessage name="name" component="div" />
@@ -336,7 +336,48 @@ const RegisterPage = () => {
                   type="submit"
                 >
                   Create Profile
-                </button>
+                </button> */}
+
+                <StyledContainer>
+                  <StyledCard>
+                    <StyledCardTop>Matter</StyledCardTop>
+                    <StyledCardBody>
+                      <StyledCardLeft>
+                        <LoginImg>
+                          <StledImageText>
+                            The only management app you’ll ever need.
+                          </StledImageText>
+                        </LoginImg>
+                      </StyledCardLeft>
+                      <StyledCardRight>
+                        <StyledRightHeading>
+                          Create your Profile
+                        </StyledRightHeading>
+                        <Form>
+                          <StyledFormEmail>
+                            <StyledFormEmailLabel>Name</StyledFormEmailLabel>
+                            <StyledFormEmailInput type="text" />
+                          </StyledFormEmail>
+                          <StyledFormPassword>
+                            <StyledFormPasswordLabel>
+                              Username
+                            </StyledFormPasswordLabel>
+                            <StyledFormPasswordInput type="password" />
+                          </StyledFormPassword>
+                          <StyledIsOwner>
+                            <StyledCheckbox type="checkbox"></StyledCheckbox>
+                            <StyledText>
+                              Are you Owner of an organization?
+                            </StyledText>
+                          </StyledIsOwner>
+                        </Form>
+                        <StyledLoginButton type="submit">
+                          Create Profile
+                        </StyledLoginButton>
+                      </StyledCardRight>
+                    </StyledCardBody>
+                  </StyledCard>
+                </StyledContainer>
               </Form>
             )}
           </Formik>
@@ -353,8 +394,7 @@ const RegisterPage = () => {
           >
             {({ isSubmitting }) => (
               <Form>
-                {
-                  /* <div>
+                <div>
                   <label htmlFor="name">Name</label>
                   <Field name="name" placeholder="name" />
                   <ErrorMessage name="name" component="div" />
@@ -369,57 +409,8 @@ const RegisterPage = () => {
                   disabled={isSubmitting}
                   type="submit"
                 >
-                  Create Profile 
-                </button> */
-
-                  <StyledContainer>
-                    <StyledCard>
-                      <StyledCardTop>Matter</StyledCardTop>
-                      <StyledCardBody>
-                        <StyledCardLeft>
-                          <LoginImg>
-                            <StledImageText>
-                              The only management app you’ll ever need.
-                            </StledImageText>
-                          </LoginImg>
-                        </StyledCardLeft>
-                        <StyledCardRight>
-                          <StyledRightHeading>
-                            Sign Up To Matter
-                          </StyledRightHeading>
-                          <Form>
-                            <StyledFormEmail>
-                              <StyledFormEmailLabel>Email</StyledFormEmailLabel>
-                              <StyledFormEmailInput type="text" />
-                            </StyledFormEmail>
-                            <StyledFormPassword>
-                              <StyledFormPasswordLabel>
-                                Password
-                              </StyledFormPasswordLabel>
-                              <StyledFormPasswordInput type="password" />
-                            </StyledFormPassword>
-                            <StyledFormConfirmPassword>
-                              <StyledFormConfirmPasswordLabel>
-                                Confirm Password
-                              </StyledFormConfirmPasswordLabel>
-                              <StyledFormConfirmPasswordInput type="password" />
-                            </StyledFormConfirmPassword>
-                          </Form>
-                          <StyledLoginButton
-                            type="submit"
-                            onClick={() => setCurrentPage(currentPage + 1)}
-                          >
-                            Continue
-                          </StyledLoginButton>
-                          <StyledHaveNotSigned>
-                            Already signed up?
-                            <StyledSignUpLink>Signin here</StyledSignUpLink>
-                          </StyledHaveNotSigned>
-                        </StyledCardRight>
-                      </StyledCardBody>
-                    </StyledCard>
-                  </StyledContainer>
-                }
+                  Create Profile
+                </button>
               </Form>
             )}
           </Formik>
@@ -441,3 +432,28 @@ export default RegisterPage;
 // const StyledCard = styled(Card)`
 //   width: 40%;
 // `;
+
+const StyledIsOwner = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+`;
+
+const StyledCheckbox = styled.input`
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ffffff;
+  box-sizing: border-box;
+  margin-right: 20px;
+  background-color: transparent;
+`;
+
+const StyledText = styled.span`
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 29px;
+
+  color: #ffffff;
+`;
