@@ -107,7 +107,7 @@ const RegisterPage = () => {
   };
 
   const handleFormData = values => {
-    dispatch(setRegisterForm(values));
+    // dispatch(setRegisterForm(values));
     setCurrentPage(currentPage + 1);
   };
 
@@ -223,7 +223,7 @@ const RegisterPage = () => {
               password: "",
               confirmPassword: ""
             }}
-            validationSchema={userSchema}
+            // validationSchema={userSchema}
           >
             {({ isSubmitting }) => (
               // <Form>
@@ -264,7 +264,7 @@ const RegisterPage = () => {
                     </StyledCardLeft>
                     <StyledCardRight>
                       <StyledRightHeading>Sign Up To Matter</StyledRightHeading>
-                      <form>
+                      <Form>
                         <StyledFormEmail>
                           <StyledFormEmailLabel>Email</StyledFormEmailLabel>
                           <StyledFormEmailInput type="text" />
@@ -281,8 +281,13 @@ const RegisterPage = () => {
                           </StyledFormConfirmPasswordLabel>
                           <StyledFormConfirmPasswordInput type="password" />
                         </StyledFormConfirmPassword>
-                      </form>
-                      <StyledLoginButton>Continue</StyledLoginButton>
+                      </Form>
+                      <StyledLoginButton
+                        type="submit"
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                      >
+                        Continue
+                      </StyledLoginButton>
                       <StyledHaveNotSigned>
                         Already signed up?
                         <StyledSignUpLink>Signin here</StyledSignUpLink>
@@ -348,7 +353,8 @@ const RegisterPage = () => {
           >
             {({ isSubmitting }) => (
               <Form>
-                <div>
+                {
+                  /* <div>
                   <label htmlFor="name">Name</label>
                   <Field name="name" placeholder="name" />
                   <ErrorMessage name="name" component="div" />
@@ -363,8 +369,57 @@ const RegisterPage = () => {
                   disabled={isSubmitting}
                   type="submit"
                 >
-                  Create Profile
-                </button>
+                  Create Profile 
+                </button> */
+
+                  <StyledContainer>
+                    <StyledCard>
+                      <StyledCardTop>Matter</StyledCardTop>
+                      <StyledCardBody>
+                        <StyledCardLeft>
+                          <LoginImg>
+                            <StledImageText>
+                              The only management app you’ll ever need.
+                            </StledImageText>
+                          </LoginImg>
+                        </StyledCardLeft>
+                        <StyledCardRight>
+                          <StyledRightHeading>
+                            Sign Up To Matter
+                          </StyledRightHeading>
+                          <Form>
+                            <StyledFormEmail>
+                              <StyledFormEmailLabel>Email</StyledFormEmailLabel>
+                              <StyledFormEmailInput type="text" />
+                            </StyledFormEmail>
+                            <StyledFormPassword>
+                              <StyledFormPasswordLabel>
+                                Password
+                              </StyledFormPasswordLabel>
+                              <StyledFormPasswordInput type="password" />
+                            </StyledFormPassword>
+                            <StyledFormConfirmPassword>
+                              <StyledFormConfirmPasswordLabel>
+                                Confirm Password
+                              </StyledFormConfirmPasswordLabel>
+                              <StyledFormConfirmPasswordInput type="password" />
+                            </StyledFormConfirmPassword>
+                          </Form>
+                          <StyledLoginButton
+                            type="submit"
+                            onClick={() => setCurrentPage(currentPage + 1)}
+                          >
+                            Continue
+                          </StyledLoginButton>
+                          <StyledHaveNotSigned>
+                            Already signed up?
+                            <StyledSignUpLink>Signin here</StyledSignUpLink>
+                          </StyledHaveNotSigned>
+                        </StyledCardRight>
+                      </StyledCardBody>
+                    </StyledCard>
+                  </StyledContainer>
+                }
               </Form>
             )}
           </Formik>
