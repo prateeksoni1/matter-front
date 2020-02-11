@@ -46,8 +46,11 @@ export const StyledCardBody = styled.div`
 `;
 
 export const StyledCardLeft = styled.div`
-  width: 65%;
+  width: 100%;
   position: relative;
+  @media only screen and (min-width: 768px) {
+    width: 65%;
+  }
 `;
 
 export const LoginImg = styled.div`

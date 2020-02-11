@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Modal } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -8,34 +8,34 @@ import AsyncSelect from "react-select/async";
 
 import api from "../api";
 import { setProfile, setRegisterForm } from "../actions";
-import PrimaryButton, { StyledButton } from "../components/PrimaryButton";
+// import PrimaryButton, { StyledButton } from "../components/PrimaryButton";
 import { toast } from "react-toastify";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import CreateOrganizationModal from "../components/register/CreateOrganizationModal";
-import {
-  StyledContainer,
-  StyledCard,
-  StyledCardTop,
-  StyledCardBody,
-  StyledCardLeft,
-  LoginImg,
-  StledImageText,
-  StyledCardRight,
-  StyledRightHeading,
-  StyledFormEmail,
-  StyledForgotPassword,
-  StyledFormEmailInput,
-  StyledFormEmailLabel,
-  StyledFormPassword,
-  StyledFormPasswordInput,
-  StyledFormPasswordLabel,
-  StyledFormConfirmPassword,
-  StyledFormConfirmPasswordInput,
-  StyledFormConfirmPasswordLabel,
-  StyledHaveNotSigned,
-  StyledLoginButton,
-  StyledSignUpLink
-} from "../styles";
+// import {
+//   StyledContainer,
+//   StyledCard,
+//   StyledCardTop,
+//   StyledCardBody,
+//   StyledCardLeft,
+//   LoginImg,
+//   StledImageText,
+//   StyledCardRight,
+//   StyledRightHeading,
+//   StyledFormEmail,
+//   StyledForgotPassword,
+//   StyledFormEmailInput,
+//   StyledFormEmailLabel,
+//   StyledFormPassword,
+//   StyledFormPasswordInput,
+//   StyledFormPasswordLabel,
+//   StyledFormConfirmPassword,
+//   StyledFormConfirmPasswordInput,
+//   StyledFormConfirmPasswordLabel,
+//   StyledHaveNotSigned,
+//   StyledLoginButton,
+//   StyledSignUpLink
+// } from "../styles";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
@@ -214,175 +214,261 @@ const RegisterPage = () => {
 
   return (
     <>
-      {currentPage === 0 && (
-        <>
-          <Formik
-            onSubmit={handleFormData}
-            initialValues={{
-              email: "",
-              password: "",
-              confirmPassword: ""
-            }}
-            validationSchema={userSchema}
-          >
-            {({ isSubmitting }) => (
-              // <Form>
-              //   <div>
-              //     <label htmlFor="email">Email</label>
-              //     <Field type="email" name="email" placeholder="email" />
-              //     <ErrorMessage name="email" component="div" />
-              //   </div>
-              //   <div>
-              //     <label htmlFor="password">Password</label>
-              //     <Field type="password" name="password" />
-              //     <ErrorMessage name="password" component="div" />
-              //   </div>
-              //   <div>
-              //     <label htmlFor="confirmPassword">Confirm Password</label>
-              //     <Field type="password" name="confirmPassword" />
-              //     <ErrorMessage name="confirmPassword" component="div" />
-              //   </div>
-              //   <button
-              //     style={{ width: "100%" }}
-              //     disabled={isSubmitting}
-              //     type="submit"
-              //   >
-              //     Continue
-              //   </button>
-              // </Form>
+      <StyledContainer>
+        <StyledHero>
+          <StyledHeroText>
+            The only management app you’ll ever need.
+          </StyledHeroText>
+        </StyledHero>
 
-              <StyledContainer>
-                <StyledCard>
-                  <StyledCardTop>Matter</StyledCardTop>
-                  <StyledCardBody>
-                    <StyledCardLeft>
-                      <LoginImg>
-                        <StledImageText>
-                          The only management app you’ll ever need.
-                        </StledImageText>
-                      </LoginImg>
-                    </StyledCardLeft>
-                    <StyledCardRight>
-                      <StyledRightHeading>Sign Up To Matter</StyledRightHeading>
-                      <form>
-                        <StyledFormEmail>
-                          <StyledFormEmailLabel>Email</StyledFormEmailLabel>
-                          <StyledFormEmailInput type="text" />
-                        </StyledFormEmail>
-                        <StyledFormPassword>
-                          <StyledFormPasswordLabel>
-                            Password
-                          </StyledFormPasswordLabel>
-                          <StyledFormPasswordInput type="password" />
-                        </StyledFormPassword>
-                        <StyledFormConfirmPassword>
-                          <StyledFormConfirmPasswordLabel>
-                            Confirm Password
-                          </StyledFormConfirmPasswordLabel>
-                          <StyledFormConfirmPasswordInput type="password" />
-                        </StyledFormConfirmPassword>
-                      </form>
-                      <StyledLoginButton>Continue</StyledLoginButton>
-                      <StyledHaveNotSigned>
-                        Already signed up?
-                        <StyledSignUpLink>Signin here</StyledSignUpLink>
-                      </StyledHaveNotSigned>
-                    </StyledCardRight>
-                  </StyledCardBody>
-                </StyledCard>
-              </StyledContainer>
-            )}
-          </Formik>
-        </>
-      )}
-      {currentPage === 1 && (
-        <>
-          <Formik
-            onSubmit={handleFormData}
-            initialValues={{
-              name: "",
-              username: "",
-              isOwner: false
-            }}
-            validationSchema={profileSchema}
-          >
-            {({ isSubmitting }) => (
-              <Form>
-                <div>
-                  <label htmlFor="name">Name</label>
-                  <Field name="name" placeholder="name" />
-                  <ErrorMessage name="name" component="div" />
-                </div>
-                <div>
-                  <label htmlFor="username">Username</label>
-                  <Field name="username" placeholder="username" />
-                  <ErrorMessage name="username" component="div" />
-                </div>
-                <div>
-                  <label htmlFor="isOwner">
-                    Are you owner of an organization?
-                  </label>
-                  <Field type="checkbox" name="isOwner" />
-                  <ErrorMessage name="isOwner" component="div" />
-                </div>
-                <button
-                  style={{ width: "100%" }}
-                  disabled={isSubmitting}
-                  type="submit"
-                >
-                  Create Profile
-                </button>
-              </Form>
-            )}
-          </Formik>
-        </>
-      )}
-      {currentPage === 2 && data.isOwner && (
-        <>
-          <Formik
-            onSubmit={handleCreateOrganization}
-            initialValues={{
-              name: ""
-            }}
-            validationSchema={organizationSchema}
-          >
-            {({ isSubmitting }) => (
-              <Form>
-                <div>
-                  <label htmlFor="name">Name</label>
-                  <Field name="name" placeholder="name" />
-                  <ErrorMessage name="name" component="div" />
-                </div>
-                <div>
-                  <label htmlFor="permissions">Permissions</label>
-                  <div>{renderPermissions()}</div>
-                  <div onClick={handleAddItem}>+</div>
-                </div>
-                <button
-                  style={{ width: "100%" }}
-                  disabled={isSubmitting}
-                  type="submit"
-                >
-                  Create Profile
-                </button>
-              </Form>
-            )}
-          </Formik>
-        </>
-      )}
+        {currentPage === 0 && (
+          <>
+            <Formik
+              onSubmit={handleFormData}
+              initialValues={{
+                email: "",
+                password: "",
+                confirmPassword: ""
+              }}
+              validationSchema={userSchema}
+            >
+              {({ isSubmitting }) => (
+                <StyledFormContainer>
+                  <StyledHeading>Sign up to Matter</StyledHeading>
+                  <StyledForm>
+                    <StyledFieldContainer>
+                      <StyledLabel htmlFor="email">Email</StyledLabel>
+                      <br />
+                      <StyledField
+                        name="email"
+                        type="email"
+                        placeholder="email@email.com"
+                      />
+                      <ErrorMessage name="email" component="div" />
+                    </StyledFieldContainer>
+                    <StyledFieldContainer>
+                      <StyledLabel htmlFor="password">Password</StyledLabel>
+                      <br />
+                      <StyledField
+                        name="password"
+                        type="password"
+                        placeholder="top secret password"
+                      />
+                      <ErrorMessage name="password" component="div" />
+                    </StyledFieldContainer>
+                    <StyledFieldContainer>
+                      <StyledLabel htmlFor="confirmPassword">
+                        Confirm Password
+                      </StyledLabel>
+                      <br />
+                      <StyledField
+                        name="confirmPassword"
+                        type="password"
+                        placeholder="top secret password"
+                      />
+                      <ErrorMessage name="confirmPassword" component="div" />
+                    </StyledFieldContainer>
+                    <StyledFieldContainer>
+                      <StyledButton type="submit">Continue</StyledButton>
+                    </StyledFieldContainer>
+                    <p>
+                      Already signed up?{" "}
+                      <StyledLink to="/signin">Sign in here</StyledLink>
+                    </p>
+                  </StyledForm>
+                </StyledFormContainer>
+              )}
+            </Formik>
+          </>
+        )}
+        {currentPage === 1 && (
+          <>
+            <Formik
+              onSubmit={handleFormData}
+              initialValues={{
+                name: "",
+                username: "",
+                isOwner: false
+              }}
+              validationSchema={profileSchema}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <div>
+                    <label htmlFor="name">Name</label>
+                    <Field name="name" placeholder="name" />
+                    <ErrorMessage name="name" component="div" />
+                  </div>
+                  <div>
+                    <label htmlFor="username">Username</label>
+                    <Field name="username" placeholder="username" />
+                    <ErrorMessage name="username" component="div" />
+                  </div>
+                  <div>
+                    <label htmlFor="isOwner">
+                      Are you owner of an organization?
+                    </label>
+                    <Field type="checkbox" name="isOwner" />
+                    <ErrorMessage name="isOwner" component="div" />
+                  </div>
+                  <button
+                    style={{ width: "100%" }}
+                    disabled={isSubmitting}
+                    type="submit"
+                  >
+                    Create Profile
+                  </button>
+                </Form>
+              )}
+            </Formik>
+          </>
+        )}
+        {currentPage === 2 && data.isOwner && (
+          <>
+            <Formik
+              onSubmit={handleCreateOrganization}
+              initialValues={{
+                name: ""
+              }}
+              validationSchema={organizationSchema}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <div>
+                    <label htmlFor="name">Name</label>
+                    <Field name="name" placeholder="name" />
+                    <ErrorMessage name="name" component="div" />
+                  </div>
+                  <div>
+                    <label htmlFor="permissions">Permissions</label>
+                    <div>{renderPermissions()}</div>
+                    <div onClick={handleAddItem}>+</div>
+                  </div>
+                  <button
+                    style={{ width: "100%" }}
+                    disabled={isSubmitting}
+                    type="submit"
+                  >
+                    Create Profile
+                  </button>
+                </Form>
+              )}
+            </Formik>
+          </>
+        )}
+      </StyledContainer>
     </>
   );
 };
 
 export default RegisterPage;
 
-// const StyledContainer = styled.div`
-//   height: 100vh;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-// `;
+const StyledContainer = styled.div`
+  display: grid;
+  grid-template-columns: auto;
 
-// const StyledCard = styled(Card)`
-//   width: 40%;
-// `;
+  @media only screen and (min-width: 768px) {
+    grid-template-columns: 70% 30%;
+  }
+`;
+
+const StyledHero = styled.div`
+  height: 50vh;
+  color: #000;
+  padding: 2em;
+  background: linear-gradient(
+      180deg,
+      rgba(172, 107, 255, 0.9) 0%,
+      rgba(172, 107, 255, 0.9) 0.01%,
+      rgba(172, 107, 255, 0) 100%
+    ),
+    url(${require("../assets/login.jpg")});
+  background-size: cover;
+
+  @media only screen and (min-width: 768px) {
+    height: 100vh;
+  }
+`;
+
+const StyledHeroText = styled.h1`
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 1.6em;
+
+  @media only screen and (min-width: 768px) {
+    font-size: 72px;
+    width: 40%;
+  }
+`;
+
+const StyledFormContainer = styled.div`
+  height: 50vh;
+  color: #fff;
+  padding: 2em;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+
+  @media only screen and (min-width: 768px) {
+    height: 100vh;
+  }
+`;
+
+const StyledForm = styled(Form)`
+  width: 100%;
+`;
+
+const StyledFieldContainer = styled.div`
+  margin-bottom: 1em;
+`;
+
+const StyledHeading = styled.h1`
+  font-weight: bold;
+  text-shadow: 0px 6px 4px rgba(0, 0, 0, 0.5);
+`;
+
+const StyledLabel = styled.label`
+  margin-bottom: 0px;
+`;
+
+const StyledField = styled(Field)`
+  width: 100%;
+  background: #525252;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  border: none;
+  padding: 0.5em;
+  color: #fff;
+
+  &::placeholder {
+    color: #a3a3a3;
+  }
+`;
+
+const StyledButton = styled.button`
+  border: none;
+  background-color: #c394ff;
+  font-weight: 700;
+  width: 100%;
+  color: #000;
+  text-transform: uppercase;
+  padding: 0.5em;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  margin-top: 20px;
+
+  &:hover {
+    box-shadow: none;
+    background-color: #dabcff;
+    transform: translateY(1px);
+  }
+`;
+
+const StyledLink = styled(Link)`
+  color: #dabcff;
+
+  &:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+`;
