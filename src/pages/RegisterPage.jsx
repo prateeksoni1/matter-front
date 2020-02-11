@@ -107,7 +107,7 @@ const RegisterPage = () => {
   };
 
   const handleFormData = values => {
-    dispatch(setRegisterForm(values));
+    // dispatch(setRegisterForm(values));
     setCurrentPage(currentPage + 1);
   };
 
@@ -471,4 +471,32 @@ const StyledLink = styled(Link)`
     color: #fff;
     text-decoration: none;
   }
+  // const StyledCard = styled(Card)
+`;
+//   width: 40%;
+// `;
+
+const StyledIsOwner = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+`;
+
+const StyledCheckbox = styled.input`
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ffffff;
+  box-sizing: border-box;
+  margin-right: 20px;
+  background-color: transparent;
+`;
+
+const StyledText = styled.span`
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 29px;
+
+  color: #ffffff;
 `;
